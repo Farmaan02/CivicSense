@@ -1,0 +1,168 @@
+{
+  "common": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh"
+  },
+  "navigation": {
+    "home": "Home",
+    "reportIssue": "Report Issue",
+    "report": "Report Issue",
+    "forums": "Forums",
+    "events": "Events",
+    "voting": "Voting",
+    "map": "Map",
+    "about": "About",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out"
+  },
+  "landing": {
+    "title": "Report Issues in Your Community",
+    "subtitle": "Help make your neighborhood better by reporting problems that need attention",
+    "reportButton": "Report an Issue",
+    "features": {
+      "photo": {
+        "title": "Take a Photo",
+        "description": "Capture the issue with your camera"
+      },
+      "location": {
+        "title": "Add Location",
+        "description": "We'll automatically detect where you are"
+      },
+      "updates": {
+        "title": "Get Updates",
+        "description": "Track progress on your report"
+      }
+    }
+  },
+  "report": {
+    "title": "Report an Issue",
+    "form": {
+      "description": {
+        "label": "Describe the issue",
+        "placeholder": "What's the problem? Be as specific as possible...",
+        "aiSuggested": "AI-suggested"
+      },
+      "contact": {
+        "label": "Contact info (optional)",
+        "placeholder": "your.email@example.com",
+        "help": "We'll send you updates about your report"
+      },
+      "anonymous": {
+        "label": "Submit anonymously",
+        "description": "Your contact info won't be shared publicly"
+      },
+      "location": {
+        "use": "Use my location",
+        "manual": "Enter location manually"
+      },
+      "submit": "Submit Report",
+      "submitting": "Submitting..."
+    },
+    "ai": {
+      "analyzing": "Analyzing your image...",
+      "complete": "AI Analysis Complete",
+      "failed": "AI Analysis Failed",
+      "confidence": "AI confidence: {{confidence}}%",
+      "suggestion": "AI Suggestion: {{suggestion}}"
+    },
+    "status": {
+      "reported": "Reported",
+      "inReview": "In Review",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "priority": {
+      "urgent": "Urgent Priority",
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority"
+    }
+  },
+  "notifications": {
+    "reportCreated": "Report Submitted!",
+    "reportUpdated": "Report Updated",
+    "analysisComplete": "AI Analysis Complete",
+    "uploadFailed": "Upload Failed",
+    "transcriptionSoon": "Transcription Coming Soon",
+    "authRequired": "Authentication Required",
+    "errorLoading": "Error Loading Data"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up here"
+    },
+    "register": {
+      "title": "Sign Up",
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in here"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "stats": {
+        "totalReports": "Total Reports",
+        "newReports": "New Reports",
+        "inProgress": "In Progress",
+        "resolved": "Resolved"
+      }
+    }
+  },
+  "forums": {
+    "title": "Community Forums",
+    "categories": {
+      "general": "General Discussion",
+      "infrastructure": "Infrastructure",
+      "safety": "Safety",
+      "environment": "Environment"
+    }
+  },
+  "events": {
+    "title": "Community Events",
+    "types": {
+      "townHall": "Town Hall",
+      "cleanup": "Cleanup",
+      "social": "Social",
+      "educational": "Educational"
+    }
+  },
+  "voting": {
+    "title": "Community Voting",
+    "categories": {
+      "government": "Government",
+      "infrastructure": "Infrastructure",
+      "environment": "Environment",
+      "community": "Community"
+    },
+    "voteRecorded": "Vote Recorded!"
+  }
+}

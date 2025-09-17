@@ -1,0 +1,1425 @@
+{
+  "info": {
+    "name": "CivicSense API",
+    "description": "Complete API collection for CivicSense platform - community issue reporting system with internationalization support",
+    "version": "1.1.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{admin_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tracking_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "report_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "team_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "media_filename",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check API health and status - returns server uptime, report count, and service status"
+          },
+          "response": []
+        },
+        {
+          "name": "AI Service Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ai/status",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "status"]
+            },
+            "description": "Check AI service availability and configuration - shows if GEMINI_KEY is configured"
+          },
+          "response": []
+        },
+        {
+          "name": "Notification Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/status",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "status"]
+            },
+            "description": "Check notification queue status and service health"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('admin_token', response.token);",
+                  "    console.log('Admin token saved:', response.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login as admin user - automatically saves JWT token for subsequent requests"
+          },
+          "response": []
+        },
+        {
+          "name": "Guest Admin Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('admin_token', response.token);",
+                  "    console.log('Guest token saved:', response.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"guest123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/guest",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "guest"]
+            },
+            "description": "Get guest admin token for testing - simplified authentication for development"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/verify",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "verify"]
+            },
+            "description": "Verify admin token validity and get user information"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports - Public",
+      "item": [
+        {
+          "name": "Create Report - Basic",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('tracking_id', response.trackingId);",
+                  "    pm.collectionVariables.set('report_id', response.id);",
+                  "    console.log('Report created:', response.trackingId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "description",
+                  "value": "Large pothole on Main Street causing traffic issues",
+                  "type": "text"
+                },
+                {
+                  "key": "contactInfo",
+                  "value": "citizen@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "anonymous",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "useLocation",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "{\"lat\": 40.7128, \"lng\": -74.0060, \"address\": \"Main Street, New York, NY\"}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": ["{{base_url}}"],
+              "path": ["reports"]
+            },
+            "description": "Create a new issue report with location - automatically saves tracking ID and report ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report - Anonymous",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "description",
+                  "value": "Broken streetlight on Oak Avenue - very dark at night",
+                  "type": "text"
+                },
+                {
+                  "key": "anonymous",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "useLocation",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "{\"lat\": 40.7589, \"lng\": -73.9851, \"address\": \"Oak Avenue, New York, NY\"}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": ["{{base_url}}"],
+              "path": ["reports"]
+            },
+            "description": "Create an anonymous report without contact information"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report - With Media",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "description",
+                  "value": "Graffiti on public building wall",
+                  "type": "text"
+                },
+                {
+                  "key": "contactInfo",
+                  "value": "concerned.citizen@email.com",
+                  "type": "text"
+                },
+                {
+                  "key": "anonymous",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "useLocation",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "{\"lat\": 40.7505, \"lng\": -73.9934, \"address\": \"City Hall, New York, NY\"}",
+                  "type": "text"
+                },
+                {
+                  "key": "media",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": ["{{base_url}}"],
+              "path": ["reports"]
+            },
+            "description": "Create report with media attachment (image/video/audio)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report - Infrastructure Issue",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "description",
+                  "value": "Water main break flooding the intersection",
+                  "type": "text"
+                },
+                {
+                  "key": "contactInfo",
+                  "value": "emergency.reporter@email.com",
+                  "type": "text"
+                },
+                {
+                  "key": "anonymous",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "useLocation",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "{\"lat\": 40.7282, \"lng\": -73.7949, \"address\": \"Queens Boulevard, Queens, NY\"}",
+                  "type": "text"
+                },
+                {
+                  "key": "issueType",
+                  "value": "infrastructure",
+                  "type": "text"
+                },
+                {
+                  "key": "severity",
+                  "value": "urgent",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": ["{{base_url}}"],
+              "path": ["reports"]
+            },
+            "description": "Create urgent infrastructure report with predefined type and severity"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": ["{{base_url}}"],
+              "path": ["reports"]
+            },
+            "description": "Get all public reports with basic information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports - Paginated",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports?limit=5&offset=0&sortBy=createdAt&sortOrder=desc",
+              "host": ["{{base_url}}"],
+              "path": ["reports"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Get reports with pagination and sorting - useful for dashboard views"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports for Map",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports?format=map&limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["reports"],
+              "query": [
+                {
+                  "key": "format",
+                  "value": "map"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            },
+            "description": "Get reports optimized for map display with location data"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports?status=reported&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["reports"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "reported"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get reports filtered by status (reported, in-progress, resolved, closed)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports by Severity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports?severity=high&severity=urgent&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["reports"],
+              "query": [
+                {
+                  "key": "severity",
+                  "value": "high"
+                },
+                {
+                  "key": "severity",
+                  "value": "urgent"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get reports filtered by severity levels (low, medium, high, urgent)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports by Issue Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports?issueType=infrastructure&issueType=safety&limit=15",
+              "host": ["{{base_url}}"],
+              "path": ["reports"],
+              "query": [
+                {
+                  "key": "issueType",
+                  "value": "infrastructure"
+                },
+                {
+                  "key": "issueType",
+                  "value": "safety"
+                },
+                {
+                  "key": "limit",
+                  "value": "15"
+                }
+              ]
+            },
+            "description": "Get reports filtered by issue type (infrastructure, safety, environment, public-services, other)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Report by Tracking ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{tracking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "{{tracking_id}}"]
+            },
+            "description": "Get specific report by tracking ID - uses saved tracking_id variable"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports?search=pothole&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["reports"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "pothole"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search reports by description text"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports - Admin",
+      "item": [
+        {
+          "name": "Get All Reports (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/reports?limit=20&offset=0&sortBy=createdAt&sortOrder=desc",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "reports"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Get all reports with admin privileges - includes sensitive data and admin fields"
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Report to Team",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": \"infrastructure-team\",\n  \"assignedBy\": \"admin\",\n  \"priority\": \"high\",\n  \"notes\": \"Urgent infrastructure issue requiring immediate attention\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports/{{report_id}}/assign",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "{{report_id}}", "assign"]
+            },
+            "description": "Assign report to a specific team with priority and notes"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Report Status - In Progress",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in-progress\",\n  \"note\": \"Investigation started by infrastructure team. Site inspection scheduled for tomorrow.\",\n  \"updatedBy\": \"admin\",\n  \"estimatedCompletion\": \"2024-12-20T17:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports/{{report_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "{{report_id}}", "status"]
+            },
+            "description": "Update report status to in-progress with detailed notes and estimated completion"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Report Status - Resolved",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\",\n  \"note\": \"Issue has been fixed. New asphalt applied and road markings restored.\",\n  \"updatedBy\": \"infrastructure-team\",\n  \"resolutionDetails\": \"Pothole filled with hot asphalt mix, compacted and sealed. Traffic cones removed.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports/{{report_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "{{report_id}}", "status"]
+            },
+            "description": "Mark report as resolved with detailed resolution information"
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Update Reports",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reportIds\": [\"{{report_id}}\"],\n  \"updates\": {\n    \"status\": \"in-progress\",\n    \"assignedTeam\": \"infrastructure-team\",\n    \"priority\": \"medium\"\n  },\n  \"note\": \"Bulk assignment to infrastructure team for coordinated response\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/reports/bulk-update",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "reports", "bulk-update"]
+            },
+            "description": "Update multiple reports at once - useful for batch operations"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Media Upload",
+      "item": [
+        {
+          "name": "Upload Image File",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('media_filename', response.filename);",
+                  "    console.log('Media uploaded:', response.filename);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "media",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/media/upload",
+              "host": ["{{base_url}}"],
+              "path": ["media", "upload"]
+            },
+            "description": "Upload image file (JPG, PNG, GIF) - automatically saves filename for other requests"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Video File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "media",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/media/upload",
+              "host": ["{{base_url}}"],
+              "path": ["media", "upload"]
+            },
+            "description": "Upload video file (MP4, MOV, AVI) - max 50MB"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Audio File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "media",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/media/upload",
+              "host": ["{{base_url}}"],
+              "path": ["media", "upload"]
+            },
+            "description": "Upload audio file (MP3, WAV, M4A) for transcription"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Media Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/media/info/{{media_filename}}",
+              "host": ["{{base_url}}"],
+              "path": ["media", "info", "{{media_filename}}"]
+            },
+            "description": "Get metadata for uploaded media file"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Media File",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/media/{{media_filename}}",
+              "host": ["{{base_url}}"],
+              "path": ["media", "{{media_filename}}"]
+            },
+            "description": "Delete uploaded media file - cleanup operation"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AI Services",
+      "item": [
+        {
+          "name": "Analyze Image - URL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageUrl\": \"https://example.com/pothole-image.jpg\",\n  \"context\": \"Street infrastructure issue reported by citizen\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/analyze-image",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "analyze-image"]
+            },
+            "description": "Analyze image from URL using AI to detect issue type, severity, and generate description"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze Image - Local File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageUrl\": \"{{base_url}}/uploads/{{media_filename}}\",\n  \"context\": \"Uploaded media file analysis\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/analyze-image",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "analyze-image"]
+            },
+            "description": "Analyze previously uploaded image file using saved filename"
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Description - Basic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prompt\": \"Broken streetlight\",\n  \"context\": \"civic issue reporting\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/generate-description",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "generate-description"]
+            },
+            "description": "Generate detailed description from basic prompt using AI"
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Description - Detailed",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prompt\": \"Water leak under street causing flooding\",\n  \"context\": \"emergency infrastructure issue\",\n  \"location\": \"Main Street intersection\",\n  \"severity\": \"urgent\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/generate-description",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "generate-description"]
+            },
+            "description": "Generate comprehensive description with additional context and severity"
+          },
+          "response": []
+        },
+        {
+          "name": "Transcribe Audio",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "audio",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "language",
+                  "value": "en",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/transcribe",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "transcribe"]
+            },
+            "description": "Transcribe audio recording to text with language detection"
+          },
+          "response": []
+        },
+        {
+          "name": "Transcribe Audio - Auto Language",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "audio",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/transcribe",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "transcribe"]
+            },
+            "description": "Transcribe audio with automatic language detection"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Teams Management",
+      "item": [
+        {
+          "name": "Get All Teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/teams",
+              "host": ["{{base_url}}"],
+              "path": ["teams"]
+            },
+            "description": "Get all available teams for report assignment"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Team - Infrastructure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('team_id', response.id);",
+                  "    console.log('Team created:', response.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Infrastructure Team\",\n  \"description\": \"Handles road maintenance, utilities, and infrastructure issues\",\n  \"category\": \"infrastructure\",\n  \"contactEmail\": \"infrastructure@city.gov\",\n  \"phone\": \"+1-555-0123\",\n  \"specialties\": [\"roads\", \"utilities\", \"bridges\", \"drainage\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/teams",
+              "host": ["{{base_url}}"],
+              "path": ["teams"]
+            },
+            "description": "Create infrastructure team with specialties and contact information"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Team - Parks & Recreation",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Parks & Recreation\",\n  \"description\": \"Handles park maintenance and recreational facility issues\",\n  \"category\": \"parks\",\n  \"contactEmail\": \"parks@city.gov\",\n  \"phone\": \"+1-555-0124\",\n  \"specialties\": [\"parks\", \"playgrounds\", \"sports facilities\", \"landscaping\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/teams",
+              "host": ["{{base_url}}"],
+              "path": ["teams"]
+            },
+            "description": "Create parks and recreation team"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Team",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Infrastructure & Utilities Team\",\n  \"description\": \"Handles road maintenance, utilities, and infrastructure issues with 24/7 emergency response\",\n  \"contactEmail\": \"infrastructure@city.gov\",\n  \"phone\": \"+1-555-0123\",\n  \"emergencyPhone\": \"+1-555-EMERGENCY\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/teams/{{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "{{team_id}}"]
+            },
+            "description": "Update existing team information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Team",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/teams/{{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "{{team_id}}"]
+            },
+            "description": "Delete team (only if no active assignments)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Get Analytics Overview",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/analytics/overview",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "overview"]
+            },
+            "description": "Get comprehensive analytics overview with key metrics"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports by Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/analytics/reports-by-status",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "reports-by-status"]
+            },
+            "description": "Get report count breakdown by status for dashboard charts"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports by Issue Type",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/analytics/reports-by-type",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "reports-by-type"]
+            },
+            "description": "Get report distribution by issue type"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Time-based Analytics",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/analytics/time-series?period=7d&groupBy=day",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "time-series"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "7d"
+                },
+                {
+                  "key": "groupBy",
+                  "value": "day"
+                }
+              ]
+            },
+            "description": "Get time-based analytics for trend analysis (7d, 30d, 90d periods)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Geographic Analytics",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/analytics/geographic?bounds=40.7,-74.1,40.8,-73.9",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "geographic"],
+              "query": [
+                {
+                  "key": "bounds",
+                  "value": "40.7,-74.1,40.8,-73.9"
+                }
+              ]
+            },
+            "description": "Get geographic distribution of reports within specified bounds"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "WhatsApp Webhook - Receive Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"from\": \"+1234567890\",\n  \"message\": \"Hello, I want to report a pothole on Main Street\",\n  \"timestamp\": \"2024-12-15T10:30:00Z\",\n  \"messageId\": \"msg_12345\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/webhooks/whatsapp",
+              "host": ["{{base_url}}"],
+              "path": ["webhooks", "whatsapp"]
+            },
+            "description": "WhatsApp webhook for receiving messages - simulates incoming message"
+          },
+          "response": []
+        },
+        {
+          "name": "WhatsApp Webhook - Media Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"from\": \"+1234567890\",\n  \"message\": \"Here's a photo of the broken streetlight\",\n  \"timestamp\": \"2024-12-15T10:35:00Z\",\n  \"messageId\": \"msg_12346\",\n  \"media\": {\n    \"type\": \"image\",\n    \"url\": \"https://example.com/media/streetlight.jpg\",\n    \"caption\": \"Broken streetlight on Oak Avenue\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/webhooks/whatsapp",
+              "host": ["{{base_url}}"],
+              "path": ["webhooks", "whatsapp"]
+            },
+            "description": "WhatsApp webhook for receiving media messages with images"
+          },
+          "response": []
+        },
+        {
+          "name": "WhatsApp Webhook Verification",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/webhooks/whatsapp?hub.mode=subscribe&hub.verify_token=TODO_SET_VERIFY_TOKEN&hub.challenge=test_challenge_12345",
+              "host": ["{{base_url}}"],
+              "path": ["webhooks", "whatsapp"],
+              "query": [
+                {
+                  "key": "hub.mode",
+                  "value": "subscribe"
+                },
+                {
+                  "key": "hub.verify_token",
+                  "value": "TODO_SET_VERIFY_TOKEN"
+                },
+                {
+                  "key": "hub.challenge",
+                  "value": "test_challenge_12345"
+                }
+              ]
+            },
+            "description": "WhatsApp webhook verification endpoint - required for WhatsApp Business API setup"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

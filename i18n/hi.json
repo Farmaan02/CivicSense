@@ -1,0 +1,168 @@
+{
+  "common": {
+    "submit": "जमा करें",
+    "cancel": "रद्द करें",
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "success": "सफलता",
+    "close": "बंद करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "view": "देखें",
+    "back": "वापस",
+    "next": "अगला",
+    "previous": "पिछला",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "sort": "क्रमबद्ध करें",
+    "refresh": "रीफ्रेश करें"
+  },
+  "navigation": {
+    "home": "होम",
+    "reportIssue": "समस्या रिपोर्ट करें",
+    "report": "समस्या रिपोर्ट करें",
+    "forums": "फोरम",
+    "events": "कार्यक्रम",
+    "voting": "मतदान",
+    "map": "नक्शा",
+    "about": "के बारे में",
+    "dashboard": "डैशबोर्ड",
+    "profile": "प्रोफ़ाइल",
+    "signIn": "साइन इन",
+    "signUp": "साइन अप",
+    "signOut": "साइन आउट"
+  },
+  "landing": {
+    "title": "अपने समुदाय में समस्याओं की रिपोर्ट करें",
+    "subtitle": "ध्यान देने वाली समस्याओं की रिपोर्ट करके अपने पड़ोस को बेहतर बनाने में मदद करें",
+    "reportButton": "समस्या रिपोर्ट करें",
+    "features": {
+      "photo": {
+        "title": "फोटो लें",
+        "description": "अपने कैमरे से समस्या को कैप्चर करें"
+      },
+      "location": {
+        "title": "स्थान जोड़ें",
+        "description": "हम स्वचालित रूप से पता लगा लेंगे कि आप कहाँ हैं"
+      },
+      "updates": {
+        "title": "अपडेट प्राप्त करें",
+        "description": "अपनी रिपोर्ट की प्रगति को ट्रैक करें"
+      }
+    }
+  },
+  "report": {
+    "title": "समस्या रिपोर्ट करें",
+    "form": {
+      "description": {
+        "label": "समस्या का वर्णन करें",
+        "placeholder": "समस्या क्या है? जितना संभव हो उतना विशिष्ट रहें...",
+        "aiSuggested": "AI-सुझावित"
+      },
+      "contact": {
+        "label": "संपर्क जानकारी (वैकल्पिक)",
+        "placeholder": "your.email@example.com",
+        "help": "हम आपकी रिपोर्ट के बारे में अपडेट भेजेंगे"
+      },
+      "anonymous": {
+        "label": "गुमनाम रूप से जमा करें",
+        "description": "आपकी संपर्क जानकारी सार्वजनिक रूप से साझा नहीं की जाएगी"
+      },
+      "location": {
+        "use": "मेरा स्थान उपयोग करें",
+        "manual": "स्थान मैन्युअल रूप से दर्ज करें"
+      },
+      "submit": "रिपोर्ट जमा करें",
+      "submitting": "जमा कर रहे हैं..."
+    },
+    "ai": {
+      "analyzing": "आपकी छवि का विश्लेषण कर रहे हैं...",
+      "complete": "AI विश्लेषण पूर्ण",
+      "failed": "AI विश्लेषण असफल",
+      "confidence": "AI विश्वास: {{confidence}}%",
+      "suggestion": "AI सुझाव: {{suggestion}}"
+    },
+    "status": {
+      "reported": "रिपोर्ट किया गया",
+      "inReview": "समीक्षा में",
+      "inProgress": "प्रगति में",
+      "resolved": "हल किया गया",
+      "closed": "बंद"
+    },
+    "priority": {
+      "urgent": "तत्काल प्राथमिकता",
+      "high": "उच्च प्राथमिकता",
+      "medium": "मध्यम प्राथमिकता",
+      "low": "कम प्राथमिकता"
+    }
+  },
+  "notifications": {
+    "reportCreated": "रिपोर्ट जमा की गई!",
+    "reportUpdated": "रिपोर्ट अपडेट की गई",
+    "analysisComplete": "AI विश्लेषण पूर्ण",
+    "uploadFailed": "अपलोड असफल",
+    "transcriptionSoon": "ट्रांसक्रिप्शन जल्द आ रहा है",
+    "authRequired": "प्रमाणीकरण आवश्यक",
+    "errorLoading": "डेटा लोड करने में त्रुटि"
+  },
+  "auth": {
+    "login": {
+      "title": "साइन इन",
+      "email": "ईमेल",
+      "password": "पासवर्ड",
+      "submit": "साइन इन",
+      "noAccount": "खाता नहीं है?",
+      "signUp": "यहाँ साइन अप करें"
+    },
+    "register": {
+      "title": "साइन अप",
+      "name": "पूरा नाम",
+      "email": "ईमेल",
+      "password": "पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि करें",
+      "submit": "साइन अप",
+      "hasAccount": "पहले से खाता है?",
+      "signIn": "यहाँ साइन इन करें"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "एडमिन डैशबोर्ड",
+      "stats": {
+        "totalReports": "कुल रिपोर्ट",
+        "newReports": "नई रिपोर्ट",
+        "inProgress": "प्रगति में",
+        "resolved": "हल किया गया"
+      }
+    }
+  },
+  "forums": {
+    "title": "सामुदायिक फोरम",
+    "categories": {
+      "general": "सामान्य चर्चा",
+      "infrastructure": "बुनियादी ढांचा",
+      "safety": "सुरक्षा",
+      "environment": "पर्यावरण"
+    }
+  },
+  "events": {
+    "title": "सामुदायिक कार्यक्रम",
+    "types": {
+      "townHall": "टाउन हॉल",
+      "cleanup": "सफाई",
+      "social": "सामाजिक",
+      "educational": "शैक्षिक"
+    }
+  },
+  "voting": {
+    "title": "सामुदायिक मतदान",
+    "categories": {
+      "government": "सरकार",
+      "infrastructure": "बुनियादी ढांचा",
+      "environment": "पर्यावरण",
+      "community": "समुदाय"
+    },
+    "voteRecorded": "वोट रिकॉर्ड किया गया!"
+  }
+}

@@ -1,0 +1,94 @@
+[
+  {
+    "trackingId": "RPT-20241215-0001",
+    "description": "Large pothole on Main Street near the intersection with Oak Avenue. It's about 2 feet wide and causing cars to swerve around it. Very dangerous, especially at night.",
+    "contactInfo": "john.citizen@email.com",
+    "anonymous": false,
+    "useLocation": true,
+    "location": {
+      "lat": 40.7128,
+      "lng": -74.006,
+      "address": "Main Street & Oak Avenue"
+    },
+    "media": null,
+    "status": "reported",
+    "createdBy": "john.citizen@email.com",
+    "assignedTo": null,
+    "priority": "high",
+    "category": "infrastructure",
+    "aiAnalysis": null,
+    "updates": [],
+    "createdAt": "2024-12-15T08:30:00.000Z",
+    "updatedAt": "2024-12-15T08:30:00.000Z"
+  },
+  {
+    "trackingId": "RPT-20241215-0002",
+    "description": "Broken streetlight in Central Park. The area is very dark at night and feels unsafe for pedestrians and joggers.",
+    "contactInfo": null,
+    "anonymous": true,
+    "useLocation": true,
+    "location": {
+      "lat": 40.7829,
+      "lng": -73.9654,
+      "address": "Central Park, near the main entrance"
+    },
+    "media": null,
+    "status": "in-review",
+    "createdBy": "anonymous",
+    "assignedTo": "maintenance-team-1",
+    "priority": "medium",
+    "category": "safety",
+    "aiAnalysis": null,
+    "updates": [
+      {
+        "message": "Report received and assigned to maintenance team for assessment",
+        "status": "in-review",
+        "createdAt": "2024-12-15T10:15:00.000Z",
+        "createdBy": "system"
+      }
+    ],
+    "createdAt": "2024-12-15T09:45:00.000Z",
+    "updatedAt": "2024-12-15T10:15:00.000Z"
+  },
+  {
+    "trackingId": "RPT-20241215-0003",
+    "description": "Overflowing trash bin at the bus stop on Elm Street. Garbage is scattered around and attracting pests. Very unsanitary condition.",
+    "contactInfo": "community.watch@neighborhood.org",
+    "anonymous": false,
+    "useLocation": true,
+    "location": {
+      "lat": 40.7589,
+      "lng": -73.9851,
+      "address": "Elm Street Bus Stop #47"
+    },
+    "media": null,
+    "status": "resolved",
+    "createdBy": "community.watch@neighborhood.org",
+    "assignedTo": "sanitation-dept",
+    "priority": "medium",
+    "category": "environment",
+    "aiAnalysis": null,
+    "updates": [
+      {
+        "message": "Report received and forwarded to sanitation department",
+        "status": "in-review",
+        "createdAt": "2024-12-14T14:20:00.000Z",
+        "createdBy": "system"
+      },
+      {
+        "message": "Sanitation team dispatched to location",
+        "status": "in-progress",
+        "createdAt": "2024-12-14T16:30:00.000Z",
+        "createdBy": "sanitation-dept"
+      },
+      {
+        "message": "Trash bin emptied and area cleaned. Additional pickup scheduled for high-traffic location.",
+        "status": "resolved",
+        "createdAt": "2024-12-15T07:45:00.000Z",
+        "createdBy": "sanitation-dept"
+      }
+    ],
+    "createdAt": "2024-12-14T13:15:00.000Z",
+    "updatedAt": "2024-12-15T07:45:00.000Z"
+  }
+]

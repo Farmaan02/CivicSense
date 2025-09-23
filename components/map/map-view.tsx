@@ -6,7 +6,7 @@ interface Report {
   _id: string
   title: string
   description: string
-  location: {
+  location?: {
     lat: number
     lng: number
     address?: string
@@ -65,7 +65,12 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
   useEffect(() => {
     if (!leaflet || !mapRef.current || map) return
 
-    const defaultCenter = reports.length > 0 ? [reports[0].location.lat, reports[0].location.lng] : [40.7128, -74.006] // Default to NYC
+    // Filter reports to only include those with location data
+    const reportsWithLocation = reports.filter(report => report.location)
+
+    const defaultCenter = reportsWithLocation.length > 0 ? 
+      [reportsWithLocation[0].location!.lat, reportsWithLocation[0].location!.lng] : 
+      [40.7128, -74.006] // Default to NYC
 
     const newMap = leaflet.map(mapRef.current).setView(defaultCenter, 13)
 
@@ -84,7 +89,10 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
 
   // Add markers for reports
   useEffect(() => {
-    if (!map || !leaflet || !reports.length) return
+    if (!map || !leaflet) return
+
+    // Filter reports to only include those with location data
+    const reportsWithLocation = reports.filter(report => report.location)
 
     // Clear existing markers
     map.eachLayer((layer: any) => {
@@ -108,7 +116,7 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
     // Add markers
     const bounds = leaflet.latLngBounds()
 
-    reports.forEach((report) => {
+    reportsWithLocation.forEach((report) => {
       if (report.location?.lat && report.location?.lng) {
         const marker = leaflet
           .marker([report.location.lat, report.location.lng], { icon: createIcon(report.severity || "low") })
@@ -151,7 +159,7 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
     })
 
     // Fit map to show all markers
-    if (reports.length > 1) {
+    if (reportsWithLocation.length > 1) {
       map.fitBounds(bounds, { padding: [20, 20] })
     }
   }, [map, leaflet, reports, onMarkerClick])
@@ -207,7 +215,7 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
       {/* Report Count */}
       <Card className="absolute bottom-4 left-4 p-2 bg-white/95 backdrop-blur-sm">
         <p className="text-sm font-medium text-gray-700">
-          {reports.length} {reports.length === 1 ? "Report" : "Reports"}
+          {reports.filter(r => r.location).length} {reports.filter(r => r.location).length === 1 ? "Report" : "Reports"} with location
         </p>
       </Card>
     </div>

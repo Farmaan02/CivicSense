@@ -323,7 +323,7 @@ export default function VotingPage() {
           }
 
           let newUserVotes: string[]
-          let newOptions: PollOption[]
+          let newOptions: PollOption[] = poll.options
 
           if (hasVotedForOption) {
             // Remove vote
@@ -341,6 +341,15 @@ export default function VotingPage() {
             // Add vote
             if (poll.allowMultipleVotes) {
               newUserVotes = [...poll.userVotes, optionId]
+              newOptions = poll.options.map((option) =>
+                option.id === optionId
+                  ? {
+                      ...option,
+                      votes: option.votes + 1,
+                      voters: [...option.voters, user.id],
+                    }
+                  : option,
+              )
             } else {
               // Single vote - remove previous vote if exists
               newUserVotes = [optionId]
@@ -362,18 +371,6 @@ export default function VotingPage() {
                 }
                 return option
               })
-            }
-
-            if (poll.allowMultipleVotes) {
-              newOptions = poll.options.map((option) =>
-                option.id === optionId
-                  ? {
-                      ...option,
-                      votes: option.votes + 1,
-                      voters: [...option.voters, user.id],
-                    }
-                  : option,
-              )
             }
           }
 
@@ -457,7 +454,7 @@ export default function VotingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-civic-background via-white to-civic-background/30">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 md:pl-4">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-civic-text mb-4 text-balance">Community Voting</h1>

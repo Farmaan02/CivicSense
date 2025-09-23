@@ -4,12 +4,14 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "@/components/ui/toaster"
-import { Navigation } from "@/components/navigation/navigation"
 import { AuthProvider } from "@/lib/auth"
 import { NotificationProvider } from "@/components/notifications/notification-provider"
 import { Suspense } from "react"
 import Script from "next/script"
 import "./globals.css"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { UserSidebar } from "@/components/navigation/user-sidebar"
+import { Header } from "@/components/layout/header"
 
 export const metadata: Metadata = {
   title: "CivicSense - Report Community Issues",
@@ -40,11 +42,16 @@ export default function RootLayout({
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <AuthProvider>
           <NotificationProvider>
-            <Suspense fallback={null}>
-              <Navigation />
-              {children}
-              <Toaster />
-            </Suspense>
+            <SidebarProvider defaultOpen={true}>
+              <UserSidebar />
+              <SidebarInset>
+                <Header />
+                <Suspense fallback={null}>
+                  {children}
+                  <Toaster />
+                </Suspense>
+              </SidebarInset>
+            </SidebarProvider>
           </NotificationProvider>
         </AuthProvider>
         <Analytics />

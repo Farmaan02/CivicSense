@@ -8,6 +8,15 @@ if (typeof window !== 'undefined') {
   console.log('[API] API_BASE_URL:', API_BASE_URL)
 }
 
+export interface User {
+  id: string
+  email: string
+  name: string
+  role: "citizen" | "admin" | "moderator"
+  avatar?: string
+  createdAt: string
+}
+
 export interface CreateReportRequest {
   description: string
   contactInfo?: string
@@ -256,6 +265,18 @@ export interface Team {
   }
   createdAt: string
   updatedAt: string
+}
+
+export interface AuthResponse {
+  token: string
+  user: User
+}
+
+export interface GuestAuthResponse {
+  token: string
+  user: {
+    name: string
+  }
 }
 
 export class ApiClient {
@@ -619,7 +640,7 @@ export class ApiClient {
         const error = (await response.json()) as ApiError
         // Handle auth errors specifically
         if (response.status === 401 || response.status === 403) {
-          handleAuthError(new Error(error.details || error.error || `HTTP ${response.status}: ${response.statusText}`))
+          handleAuthError(new Error(error.details || error.error || `HTTP ${response.status}: ${response.statusText}`), response.status)
         }
         throw new Error(error.details || error.error || `HTTP ${response.status}: ${response.statusText}`)
       }
@@ -659,7 +680,7 @@ export class ApiClient {
         const error = result as ApiError
         // Handle auth errors specifically
         if (response.status === 401 || response.status === 403) {
-          handleAuthError(new Error(error.details || error.error || "Failed to assign report"))
+          handleAuthError(new Error(error.details || error.error || "Failed to assign report"), response.status)
         }
         throw new Error(error.details || error.error || "Failed to assign report")
       }
@@ -709,7 +730,7 @@ export class ApiClient {
         const error = result as ApiError
         // Handle auth errors specifically
         if (response.status === 401 || response.status === 403) {
-          handleAuthError(new Error(error.details || error.error || "Failed to update report status"))
+          handleAuthError(new Error(error.details || error.error || "Failed to update report status"), response.status)
         }
         throw new Error(error.details || error.error || "Failed to update report status")
       }
@@ -745,7 +766,7 @@ export class ApiClient {
         const error = (await response.json()) as ApiError
         // Handle auth errors specifically
         if (response.status === 401 || response.status === 403) {
-          handleAuthError(new Error(error.details || error.error || `HTTP ${response.status}: ${response.statusText}`))
+          handleAuthError(new Error(error.details || error.error || `HTTP ${response.status}: ${response.statusText}`), response.status)
         }
         throw new Error(error.details || error.error || `HTTP ${response.status}: ${response.statusText}`)
       }
@@ -968,6 +989,83 @@ export class ApiClient {
       throw error
     }
   }
+
+  async login(email: string, password: string): Promise<AuthResponse> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        const error = result as ApiError
+        throw new Error(error.details || error.error || "Login failed")
+      }
+
+      return result as AuthResponse
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        throw new Error("Unable to connect to server. Please check your internet connection.")
+      }
+      throw error
+    }
+  }
+
+  async signup(email: string, password: string, name: string): Promise<AuthResponse> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, name }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        const error = result as ApiError
+        throw new Error(error.details || error.error || "Signup failed")
+      }
+
+      return result as AuthResponse
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        throw new Error("Unable to connect to server. Please check your internet connection.")
+      }
+      throw error
+    }
+  }
+
+  async guestLogin(): Promise<GuestAuthResponse> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/guest`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        const error = result as ApiError
+        throw new Error(error.details || error.error || "Guest login failed")
+      }
+
+      return result as GuestAuthResponse
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        throw new Error("Unable to connect to server. Please check your internet connection.")
+      }
+      throw error
+    }
+  }
 }
 
 // Default API client instance
@@ -976,9 +1074,9 @@ export const apiClient = new ApiClient()
 export const api = apiClient
 
 // Enhanced error handling for authentication failures
-const handleAuthError = (error: any): never => {
+const handleAuthError = (error: Error, statusCode: number): never => {
   // Clear auth state on 401/403 errors
-  if (error instanceof Response && (error.status === 401 || error.status === 403)) {
+  if (statusCode === 401 || statusCode === 403) {
     // Clear auth token from localStorage
     if (typeof window !== 'undefined') {
       localStorage.removeItem('admin_token')

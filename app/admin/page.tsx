@@ -233,334 +233,302 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="w-64 border-r bg-sidebar min-h-[calc(100vh-4rem)]">
-          <nav className="p-4 space-y-2">
-            <Button
-              variant={activeTab === "reports" ? "default" : "ghost"}
-              className="w-full justify-start gap-2"
-              onClick={() => setActiveTab("reports")}
-            >
-              <FileText className="h-4 w-4" />
-              Reports Dashboard
-            </Button>
-            <Button
-              variant={activeTab === "teams" ? "default" : "ghost"}
-              className="w-full justify-start gap-2"
-              onClick={() => setActiveTab("teams")}
-            >
-              <Users className="h-4 w-4" />
-              Team Management
-            </Button>
-            <Button
-              variant={activeTab === "analytics" ? "default" : "ghost"}
-              className="w-full justify-start gap-2"
-              onClick={() => setActiveTab("analytics")}
-            >
-              <BarChart3 className="h-4 w-4" />
-              Analytics
-            </Button>
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsContent value="reports">
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Total Reports</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{stats.total}</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">New Reports</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-blue-600">{stats.reported}</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-orange-600">{stats.inProgress}</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Resolved</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Urgent</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-red-600">{stats.urgent}</div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Filters */}
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    Filters
-                  </CardTitle>
+      {/* Main Content */}
+      <main className="p-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsContent value="reports">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Total Reports</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search reports..."
-                        value={filters.search}
-                        onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
-                        className="pl-9"
-                      />
-                    </div>
-                    <Select
-                      value={filters.status}
-                      onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Statuses</SelectItem>
-                        <SelectItem value="reported">Reported</SelectItem>
-                        <SelectItem value="in-review">In Review</SelectItem>
-                        <SelectItem value="in-progress">In Progress</SelectItem>
-                        <SelectItem value="resolved">Resolved</SelectItem>
-                        <SelectItem value="closed">Closed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      value={filters.priority}
-                      onValueChange={(value) => setFilters((prev) => ({ ...prev, priority: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Priority" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Priorities</SelectItem>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                        <SelectItem value="urgent">Urgent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      value={filters.assignedTo}
-                      onValueChange={(value) => setFilters((prev) => ({ ...prev, assignedTo: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Assigned To" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Teams</SelectItem>
-                        {teams.map((team) => (
-                          <SelectItem key={team.id} value={team.id}>
-                            {team.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      variant="outline"
-                      onClick={() =>
-                        setFilters({ search: "", status: "all", priority: "all", assignedTo: "all", category: "all" })
-                      }
-                    >
-                      Clear Filters
-                    </Button>
-                  </div>
+                  <div className="text-2xl font-bold">{stats.total}</div>
                 </CardContent>
               </Card>
-
-              {/* View Toggle and Reports */}
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Reports ({filteredReports.length})</CardTitle>
-                    <Tabs value={view} onValueChange={(value: string) => setView(value as "list" | "map")}>
-                      <TabsList>
-                        <TabsTrigger value="list" className="flex items-center gap-2">
-                          <List className="h-4 w-4" />
-                          List View
-                        </TabsTrigger>
-                        <TabsTrigger value="map" className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          Map View
-                        </TabsTrigger>
-                      </TabsList>
-                    </Tabs>
-                  </div>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">New Reports</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {view === "list" ? (
-                    <div className="space-y-4">
-                      {loading ? (
-                        <div className="text-center py-8 text-muted-foreground">Loading reports...</div>
-                      ) : filteredReports.length === 0 ? (
-                        <div className="text-center py-8 text-muted-foreground">No reports found</div>
-                      ) : (
-                        filteredReports.map((report) => (
-                          <Card 
-                            key={generateReportKey(report)} 
-                            className="hover:shadow-md transition-shadow"
-                          >
-                            <CardContent className="p-4">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <h3 className="font-semibold">{report.trackingId}</h3>
-                                    <Badge className={statusColors[report.status]}>
-                                      {report.status.replace("-", " ")}
-                                    </Badge>
-                                    <Badge className={priorityColors[report.priority]}>{report.priority}</Badge>
-                                  </div>
-                                  <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-                                    {report.description}
-                                  </p>
-                                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                    <span className="flex items-center gap-1">
-                                      <Calendar className="h-3 w-3" />
-                                      {new Date(report.createdAt).toLocaleDateString()}
-                                    </span>
-                                    {report.assignedTo && (
-                                      <span className="flex items-center gap-1">
-                                        <UserCheck className="h-3 w-3" />
-                                        {teams.find((t) => t.id === report.assignedTo)?.name || "Unknown Team"}
-                                      </span>
-                                    )}
-                                    {report.location && (
-                                      <span className="flex items-center gap-1">
-                                        <MapPin className="h-3 w-3" />
-                                        Location Available
-                                      </span>
-                                    )}
-                                  </div>
+                  <div className="text-2xl font-bold text-blue-600">{stats.reported}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-orange-600">{stats.inProgress}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Resolved</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Urgent</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-red-600">{stats.urgent}</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Filters */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  Filters
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search reports..."
+                      value={filters.search}
+                      onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+                      className="pl-9"
+                    />
+                  </div>
+                  <Select
+                    value={filters.status}
+                    onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Statuses</SelectItem>
+                      <SelectItem value="reported">Reported</SelectItem>
+                      <SelectItem value="in-review">In Review</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                      <SelectItem value="closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select
+                    value={filters.priority}
+                    onValueChange={(value) => setFilters((prev) => ({ ...prev, priority: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Priority" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Priorities</SelectItem>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="urgent">Urgent</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select
+                    value={filters.assignedTo}
+                    onValueChange={(value) => setFilters((prev) => ({ ...prev, assignedTo: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Assigned To" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Teams</SelectItem>
+                      {teams.map((team) => (
+                        <SelectItem key={team.id} value={team.id}>
+                          {team.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      setFilters({ search: "", status: "all", priority: "all", assignedTo: "all", category: "all" })
+                    }
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* View Toggle and Reports */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Reports ({filteredReports.length})</CardTitle>
+                  <Tabs value={view} onValueChange={(value: string) => setView(value as "list" | "map")}>
+                    <TabsList>
+                      <TabsTrigger value="list" className="flex items-center gap-2">
+                        <List className="h-4 w-4" />
+                        List View
+                      </TabsTrigger>
+                      <TabsTrigger value="map" className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        Map View
+                      </TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {view === "list" ? (
+                  <div className="space-y-4">
+                    {loading ? (
+                      <div className="text-center py-8 text-muted-foreground">Loading reports...</div>
+                    ) : filteredReports.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">No reports found</div>
+                    ) : (
+                      filteredReports.map((report) => (
+                        <Card 
+                          key={generateReportKey(report)} 
+                          className="hover:shadow-md transition-shadow"
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <h3 className="font-semibold">{report.trackingId}</h3>
+                                  <Badge className={statusColors[report.status]}>
+                                    {report.status.replace("-", " ")}
+                                  </Badge>
+                                  <Badge className={priorityColors[report.priority]}>{report.priority}</Badge>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Dialog>
-                                    <DialogTrigger asChild>
-                                      <Button variant="outline" size="sm">
-                                        <Eye className="h-4 w-4" />
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="max-w-2xl">
-                                      <DialogHeader>
-                                        <DialogTitle>{report.trackingId}</DialogTitle>
-                                        <DialogDescription>Report Details</DialogDescription>
-                                      </DialogHeader>
-                                      <div className="space-y-4">
-                                        <div>
-                                          <Label>Description</Label>
-                                          <p className="text-sm mt-1">{report.description}</p>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                          <div>
-                                            <Label>Status</Label>
-                                            <Badge className={`${statusColors[report.status]} mt-1`}>
-                                              {report.status.replace("-", " ")}
-                                            </Badge>
-                                          </div>
-                                          <div>
-                                            <Label>Priority</Label>
-                                            <Badge className={`${priorityColors[report.priority]} mt-1`}>
-                                              {report.priority}
-                                            </Badge>
-                                          </div>
-                                        </div>
-                                        {report.location && (
-                                          <div>
-                                            <Label>Location</Label>
-                                            <p className="text-sm mt-1">
-                                              {report.location.address ||
-                                                `${report.location.lat}, ${report.location.lng}`}
-                                            </p>
-                                          </div>
-                                        )}
-                                        {report.updates.length > 0 && (
-                                          <div>
-                                            <Label>Updates</Label>
-                                            <div className="space-y-2 mt-2">
-                                              {report.updates.map((update, index) => (
-                                                <div key={index} className="text-sm border-l-2 border-muted pl-3">
-                                                  <p>{update.message}</p>
-                                                  <p className="text-xs text-muted-foreground">
-                                                    {update.createdBy} • {new Date(update.createdAt).toLocaleString()}
-                                                  </p>
-                                                </div>
-                                              ))}
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </DialogContent>
-                                  </Dialog>
-
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedReport(report)
-                                      setIsAssignDialogOpen(true)
-                                    }}
-                                  >
-                                    <UserCheck className="h-4 w-4" />
-                                  </Button>
-
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedReport(report)
-                                      setStatusData({ status: report.status, note: "" })
-                                      setIsStatusDialogOpen(true)
-                                    }}
-                                  >
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
+                                <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                                  {report.description}
+                                </p>
+                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                  <span className="flex items-center gap-1">
+                                    <Calendar className="h-3 w-3" />
+                                    {new Date(report.createdAt).toLocaleDateString()}
+                                  </span>
+                                  {report.assignedTo && (
+                                    <span className="flex items-center gap-1">
+                                      <UserCheck className="h-3 w-3" />
+                                      {teams.find((t) => t.id === report.assignedTo)?.name || "Unknown Team"}
+                                    </span>
+                                  )}
+                                  {report.location && (
+                                    <span className="flex items-center gap-1">
+                                      <MapPin className="h-3 w-3" />
+                                      Location Available
+                                    </span>
+                                  )}
                                 </div>
                               </div>
-                            </CardContent>
-                          </Card>
-                        ))
-                      )}
-                    </div>
-                  ) : (
-                    <div className="h-96">
-                      <ReportsMap reports={filteredReports.filter((r) => r.location) as any[]} />
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
+                              <div className="flex items-center gap-2">
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline" size="sm">
+                                      <Eye className="h-4 w-4" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="max-w-2xl">
+                                    <DialogHeader>
+                                      <DialogTitle>{report.trackingId}</DialogTitle>
+                                      <DialogDescription>Report Details</DialogDescription>
+                                    </DialogHeader>
+                                    <div className="space-y-4">
+                                      <div>
+                                        <Label>Description</Label>
+                                        <p className="text-sm mt-1">{report.description}</p>
+                                      </div>
+                                      <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                          <Label>Status</Label>
+                                          <Badge className={`${statusColors[report.status]} mt-1`}>
+                                            {report.status.replace("-", " ")}
+                                          </Badge>
+                                        </div>
+                                        <div>
+                                          <Label>Priority</Label>
+                                          <Badge className={`${priorityColors[report.priority]} mt-1`}>
+                                            {report.priority}
+                                          </Badge>
+                                        </div>
+                                      </div>
+                                      {report.location && (
+                                        <div>
+                                          <Label>Location</Label>
+                                          <p className="text-sm mt-1">
+                                            {report.location.address ||
+                                              `${report.location.lat}, ${report.location.lng}`}
+                                          </p>
+                                        </div>
+                                      )}
+                                      {report.updates.length > 0 && (
+                                        <div>
+                                          <Label>Updates</Label>
+                                          <div className="space-y-2 mt-2">
+                                            {report.updates.map((update, index) => (
+                                              <div key={index} className="text-sm border-l-2 border-muted pl-3">
+                                                <p>{update.message}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                  {update.createdBy} • {new Date(update.createdAt).toLocaleString()}
+                                                </p>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </DialogContent>
+                                </Dialog>
 
-            <TabsContent value="teams">
-              <TeamTable teams={teams} />
-            </TabsContent>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedReport(report)
+                                    setIsAssignDialogOpen(true)
+                                  }}
+                                >
+                                  <UserCheck className="h-4 w-4" />
+                                </Button>
 
-            <TabsContent value="analytics">
-              <AnalyticsPanel />
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedReport(report)
+                                    setStatusData({ status: report.status, note: "" })
+                                    setIsStatusDialogOpen(true)
+                                  }}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))
+                    )}
+                  </div>
+                ) : (
+                  <div className="h-96">
+                    <ReportsMap reports={filteredReports.filter((r) => r.location) as any[]} />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="teams">
+            <TeamTable teams={teams} />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <AnalyticsPanel />
+          </TabsContent>
+        </Tabs>
+      </main>
 
       {/* Assignment Dialog */}
       <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>

@@ -396,7 +396,7 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-civic-background via-white to-civic-background/30">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 md:pl-4">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-civic-text mb-4 text-balance">Community Events</h1>
@@ -756,7 +756,7 @@ export default function EventsPage() {
                           onClick={() => handleRSVP(event.id)}
                           variant={isAttending ? "default" : "outline"}
                           size="sm"
-                          disabled={!isAttending && isFull}
+                          disabled={!!(!isAttending && isFull)}
                           className={
                             isAttending ? "bg-civic-primary hover:bg-civic-accent text-white" : "bg-transparent"
                           }

@@ -24,13 +24,13 @@ export function Navigation() {
   const { t } = useTranslation()
 
   const navItems = [
-    { href: "/", label: t("navigation.home"), icon: "🏠" },
-    { href: "/report", label: t("navigation.reportIssue"), icon: "📋" },
-    { href: "/forums", label: t("navigation.forums"), icon: "💬" },
-    { href: "/events", label: t("navigation.events"), icon: "📅" },
-    { href: "/voting", label: t("navigation.voting"), icon: "🗳️" },
-    { href: "/map", label: t("navigation.map"), icon: "🗺️" },
-    { href: "/about", label: t("navigation.about"), icon: "ℹ️" },
+    { href: "/", label: t("home"), icon: "🏠" },
+    { href: "/report", label: t("reportIssue"), icon: "📋" },
+    { href: "/forums", label: t("forums"), icon: "💬" },
+    { href: "/events", label: t("events"), icon: "📅" },
+    { href: "/voting", label: t("voting"), icon: "🗳️" },
+    { href: "/map", label: t("map"), icon: "🗺️" },
+    { href: "/about", label: t("about"), icon: "ℹ️" },
   ]
 
   const isActive = (href: string) => {
@@ -85,22 +85,22 @@ export function Navigation() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard">{t("navigation.dashboard")}</Link>
+                    <Link href="/dashboard">{t("dashboard")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">{t("navigation.profile")}</Link>
+                    <Link href="/profile">{t("profile")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout}>{t("navigation.signOut")}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}>{t("signOut")}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="hidden md:flex items-center gap-2">
                 <Button variant="ghost" asChild>
-                  <Link href="/login">{t("navigation.signIn")}</Link>
+                  <Link href="/login">{t("signIn")}</Link>
                 </Button>
                 <Button asChild>
-                  <Link href="/register">{t("navigation.signUp")}</Link>
+                  <Link href="/register">{t("signUp")}</Link>
                 </Button>
               </div>
             )}
@@ -136,11 +136,11 @@ export function Navigation() {
                   <div className="border-t pt-2 mt-2">
                     <Link href="/login" onClick={() => setIsMenuOpen(false)}>
                       <Button variant="ghost" className="w-full justify-start">
-                        {t("navigation.signIn")}
+                        {t("signIn")}
                       </Button>
                     </Link>
                     <Link href="/register" onClick={() => setIsMenuOpen(false)}>
-                      <Button className="w-full justify-start mt-2">{t("navigation.signUp")}</Button>
+                      <Button className="w-full justify-start mt-2">{t("signUp")}</Button>
                     </Link>
                   </div>
                 </>

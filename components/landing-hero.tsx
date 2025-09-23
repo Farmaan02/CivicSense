@@ -7,7 +7,7 @@ export function LandingHero() {
   const { t } = useTranslation()
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 md:pl-20">
       <div className="max-w-4xl mx-auto text-center space-y-8">
         <div className="space-y-4">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 text-balance">{t("landing.title")}</h1>

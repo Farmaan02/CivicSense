@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { createContext, useContext, useEffect, useState } from "react"
+import { api } from "@/utils/api"
 
 export interface User {
   id: string
@@ -10,7 +11,7 @@ export interface User {
   name: string
   role: "citizen" | "admin" | "moderator"
   avatar?: string
-  createdAt: Date
+  createdAt: string
 }
 
 interface AuthContextType {
@@ -19,6 +20,7 @@ interface AuthContextType {
   register: (email: string, password: string, name: string) => Promise<void>
   logout: () => void
   loading: boolean
+  guestLogin: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -37,9 +39,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Check for existing session
-    const storedUser = localStorage.getItem("civicsense_user")
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    const token = localStorage.getItem("auth_token")
+    const storedUser = localStorage.getItem("civiccare_user")
+    
+    if (token && storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+      } catch (e) {
+        console.error("Failed to parse stored user", e)
+        localStorage.removeItem("civiccare_user")
+        localStorage.removeItem("auth_token")
+      }
     }
     setLoading(false)
   }, [])
@@ -47,20 +58,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     setLoading(true)
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Mock user data
-      const mockUser: User = {
-        id: "1",
-        email,
-        name: email.split("@")[0],
-        role: email.includes("admin") ? "admin" : "citizen",
-        createdAt: new Date(),
-      }
-
-      setUser(mockUser)
-      localStorage.setItem("civiccare_user", JSON.stringify(mockUser))
+      const response = await api.login(email, password)
+      setUser(response.user)
+      localStorage.setItem("auth_token", response.token)
+      localStorage.setItem("civiccare_user", JSON.stringify(response.user))
     } catch (error) {
       throw new Error("Invalid credentials")
     } finally {
@@ -71,21 +72,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (email: string, password: string, name: string) => {
     setLoading(true)
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await api.signup(email, password, name)
+      setUser(response.user)
+      localStorage.setItem("auth_token", response.token)
+      localStorage.setItem("civiccare_user", JSON.stringify(response.user))
+    } catch (error: any) {
+      throw new Error(error.message || "Registration failed")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email,
-        name,
+  const guestLogin = async () => {
+    setLoading(true)
+    try {
+      const response = await api.guestLogin()
+      const guestUser: User = {
+        id: "guest",
+        email: "",
+        name: response.user.name,
         role: "citizen",
-        createdAt: new Date(),
+        createdAt: new Date().toISOString()
       }
-
-      setUser(mockUser)
-      localStorage.setItem("civiccare_user", JSON.stringify(mockUser))
-    } catch (error) {
-      throw new Error("Registration failed")
+      setUser(guestUser)
+      localStorage.setItem("auth_token", response.token)
+      localStorage.setItem("civiccare_user", JSON.stringify(guestUser))
+    } catch (error: any) {
+      throw new Error(error.message || "Guest login failed")
     } finally {
       setLoading(false)
     }
@@ -94,7 +107,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null)
     localStorage.removeItem("civiccare_user")
+    localStorage.removeItem("auth_token")
   }
 
-  return <AuthContext.Provider value={{ user, login, register, logout, loading }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, login, register, logout, loading, guestLogin }}>{children}</AuthContext.Provider>
 }

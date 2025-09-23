@@ -3,23 +3,8 @@ import { useState, useEffect } from "react"
 import { MapView } from "@/components/map/map-view"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { apiClient } from "@/utils/api"
+import { apiClient, type Report } from "@/utils/api"
 import { useToast } from "@/hooks/use-toast"
-
-interface Report {
-  _id: string
-  title: string
-  description: string
-  location: {
-    lat: number
-    lng: number
-    address?: string
-  }
-  status: string
-  severity: string
-  mediaUrl?: string
-  createdAt: string
-}
 
 export default function MapPage() {
   const [reports, setReports] = useState<Report[]>([])
@@ -79,11 +64,14 @@ export default function MapPage() {
     )
   }
 
+  // Filter reports to only include those with location data
+  const reportsWithLocation = reports.filter(report => report.location)
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-4 md:pl-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Community Issues Map</h1>
@@ -101,12 +89,12 @@ export default function MapPage() {
       </div>
 
       {/* Map Container */}
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="max-w-7xl mx-auto p-4 md:pl-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Map */}
           <div className="lg:col-span-2">
             <Card className="p-0 overflow-hidden">
-              <MapView reports={reports} onMarkerClick={handleMarkerClick} className="h-[600px]" />
+              <MapView reports={reportsWithLocation} onMarkerClick={handleMarkerClick} className="h-[600px]" />
             </Card>
           </div>
 
@@ -119,6 +107,10 @@ export default function MapPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Total Reports</span>
                   <span className="font-medium">{reports.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Reports with Location</span>
+                  <span className="font-medium">{reportsWithLocation.length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">High Priority</span>
@@ -159,7 +151,7 @@ export default function MapPage() {
                       Priority: <span className="font-medium">{selectedReport.severity}</span>
                     </div>
                     <div>Reported: {new Date(selectedReport.createdAt).toLocaleDateString()}</div>
-                    {selectedReport.location.address && <div>Location: {selectedReport.location.address}</div>}
+                    {selectedReport.location?.address && <div>Location: {selectedReport.location.address}</div>}
                   </div>
 
                   <Button

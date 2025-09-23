@@ -1,10 +1,10 @@
-// pages/api/test-db.js
-import { connectDB } from "../../lib/mongoose";
-import User from "../../models/User";
+// app/api/test-db/route.ts
+import connectToDatabase from "@/lib/mongodb";
+import User from "@/lib/models/User";
 
-export default async function handler(req, res) {
+export async function GET() {
   try {
-    await connectDB();
+    await connectToDatabase();
 
     // test user create
     const user = await User.create({
@@ -12,8 +12,8 @@ export default async function handler(req, res) {
       email: `test${Date.now()}@example.com`,
     });
 
-    res.status(200).json({ success: true, user });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    return Response.json({ success: true, user });
+  } catch (err: any) {
+    return Response.json({ success: false, error: err.message }, { status: 500 });
   }
 }

@@ -307,6 +307,7 @@ export class ApiClient {
     const formData = new FormData()
 
     formData.append("description", data.description)
+    // Convert boolean values to strings as expected by the backend
     formData.append("anonymous", data.anonymous.toString())
     formData.append("useLocation", data.useLocation.toString())
 
@@ -319,6 +320,7 @@ export class ApiClient {
     }
 
     if (data.location) {
+      // Stringify the location object as expected by the backend
       formData.append("location", JSON.stringify(data.location))
     }
 

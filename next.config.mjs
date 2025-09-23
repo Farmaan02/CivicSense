@@ -8,6 +8,15 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    // Allow images from Google Maps and other trusted sources
+    domains: [
+      'maps.googleapis.com',
+      'maps.gstatic.com',
+      'lh3.googleusercontent.com',
+      'avatars.githubusercontent.com',
+      'images.unsplash.com',
+      'placehold.co'
+    ],
   },
 }
 

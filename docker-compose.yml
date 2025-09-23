@@ -14,7 +14,6 @@ services:
       MONGO_INITDB_DATABASE: civicsense
     volumes:
       - mongo_data:/data/db
-      - ./scripts/db/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     networks:
       - civicsense-network
 
@@ -31,35 +30,27 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - MONGODB_URI=mongodb://admin:password123@mongo:27017/civicsense?authSource=admin
-      - GEMINI_KEY=${GEMINI_KEY:-}
-      - WHATSAPP_API=${WHATSAPP_API:-TODO}
-      - WHATSAPP_VERIFY_TOKEN=${WHATSAPP_VERIFY_TOKEN:-TODO_SET_VERIFY_TOKEN}
+      - JWT_SECRET=your-jwt-secret-here-change-in-production
+      - GUEST_PASSWORD=guest123
     volumes:
       - ./uploads:/app/uploads
-      - ./scripts/logs:/app/logs
     depends_on:
       - mongo
     networks:
       - civicsense-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   # Frontend Next.js application
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile
     container_name: civicsense-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - NEXT_PUBLIC_API_URL=http://backend:3001
     depends_on:
       - backend
     networks:

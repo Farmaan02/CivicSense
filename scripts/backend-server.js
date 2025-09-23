@@ -14,6 +14,7 @@ import authRoutes from "./routes/auth.js"
 import teamsRoutes from "./routes/teams.js"
 import analyticsRoutes from "./routes/analytics.js"
 import webhookRoutes from "./routes/webhooks.js"
+import mediaRoutes from "./routes/media.js"
 import notificationService from "./services/notificationService.js"
 import { authenticateAdmin, requirePermission } from "./middleware/adminAuth.js"
 
@@ -56,7 +57,7 @@ if (missingEnvVars.length > 0) {
 }
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3002
 
 // Middleware
 app.use(cors())
@@ -105,10 +106,26 @@ let reports = []
 
 async function connectToDatabase() {
   console.log(`[CivicSense] MongoDB URI found: ${MONGODB_URI ? 'Yes' : 'No'}`)
-  console.log(`[CivicSense] Attempting connection to: ${MONGODB_URI.replace(/:\/\/[^:]*:[^@]*@/, '://***:***@')}`)
+  if (MONGODB_URI) {
+    console.log(`[CivicSense] Attempting connection to: ${MONGODB_URI.replace(/:\/\/[^:]*:[^@]*@/, '://***:***@')}`)
+    console.log(`[CivicSense] Node.js version: ${process.version}`)
+    
+    // Check Node.js version compatibility
+    if (!process.version.startsWith('v20.')) {
+      console.warn('[CivicSense] Warning: This project is designed for Node.js v20.x for optimal MongoDB compatibility')
+      console.warn('[CivicSense] Current version may cause SSL/TLS connection issues with MongoDB Atlas')
+    }
+  }
+  
   try {
-    await mongoose.connect(MONGODB_URI)
-    console.log(`[CivicSense] Connected to MongoDB Atlas successfully`)
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 10000,
+      // Add SSL/TLS options for better compatibility
+      tls: true,
+      tlsInsecure: false,
+    })
+    console.log(`[CivicSense] Connected to MongoDB successfully`)
     console.log(`[CivicSense] Database: ${mongoose.connection.db.databaseName}`)
     
     // Seed database if empty
@@ -117,7 +134,20 @@ async function connectToDatabase() {
     console.log("[CivicSense] Database mode: MongoDB enabled")
   } catch (error) {
     console.error(`[CivicSense] MongoDB connection error:`, error.message)
-    console.error(`[CivicSense] Connection string used: ${MONGODB_URI.replace(/:\/\/[^:]*:[^@]*@/, '://***:***@')}`)
+    
+    // Provide specific guidance based on error type
+    if (error.message.includes('tlsv1 alert internal error')) {
+      console.error('[CivicSense] SSL/TLS compatibility issue detected.')
+      console.error('[CivicSense] This is commonly caused by Node.js version incompatibility.')
+      console.error('[CivicSense] Please use Node.js v20.x for MongoDB Atlas compatibility.')
+      console.error('[CivicSense] Current Node.js version:', process.version)
+    } else if (error.message.includes('AuthenticationFailed')) {
+      console.error('[CivicSense] Authentication failed. Please check your MongoDB credentials.')
+      console.error('[CivicSense] Ensure your MONGODB_URI in .env.local has correct username/password.')
+    } else if (error.message.includes('ENOTFOUND')) {
+      console.error('[CivicSense] DNS resolution failed. Check your MongoDB URI and network connectivity.')
+    }
+    
     console.log("[CivicSense] Falling back to in-memory mode")
     reports = seedInMemoryDatabase()
     useDatabase = false
@@ -172,6 +202,7 @@ app.use("/teams", teamsRoutes)
 app.use("/ai", aiRoutes)
 app.use("/analytics", analyticsRoutes)
 app.use("/webhooks", webhookRoutes)
+app.use("/media", mediaRoutes)
 
 // Admin reports endpoint (protected)
 app.get("/admin/reports", authenticateAdmin, async (req, res) => {
@@ -290,28 +321,6 @@ app.get("/admin/reports", authenticateAdmin, async (req, res) => {
   } catch (error) {
     console.error("Admin reports error:", error)
     res.status(500).json({ error: "Failed to fetch admin reports" })
-  }
-})
-
-// Media upload endpoint
-app.post("/media/upload", upload.single("media"), (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" })
-    }
-
-    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-
-    res.json({
-      url: fileUrl,
-      filename: req.file.filename,
-      originalName: req.file.originalname,
-      size: req.file.size,
-      mimetype: req.file.mimetype,
-    })
-  } catch (error) {
-    console.error("Media upload error:", error)
-    res.status(500).json({ error: "Failed to upload media" })
   }
 })
 

@@ -1,16 +1,18 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast"
 import { Eye, EyeOff } from "lucide-react"
 import { useAuth } from "@/lib/auth"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { loginSchema, registerSchema, type LoginFormData, type RegisterFormData } from "@/lib/form-validation"
+import { useToastWrapper } from "@/components/ui/toast-wrapper"
 
 interface AuthFormProps {
   type: "login" | "register"
@@ -19,71 +21,61 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [name, setName] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const { toast } = useToast()
+  const { showToast, showErrorToast, showSuccessToast } = useToastWrapper()
   const { guestLogin } = useAuth()
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (type === "register" && password !== confirmPassword) {
-      toast({
-        title: "Password mismatch",
-        description: "Please make sure your passwords match.",
-        variant: "destructive",
-      })
-      return
+  // Separate form instances for login and register
+  const loginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
     }
+  })
 
+  const registerForm = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      name: "",
+      confirmPassword: "",
+    }
+  })
+
+  const { register: loginRegister, handleSubmit: handleLoginSubmit, formState: { errors: loginErrors } } = loginForm
+  const { register: registerRegister, handleSubmit: handleRegisterSubmit, formState: { errors: registerErrors } } = registerForm
+
+  const onLoginSubmit = async (data: LoginFormData) => {
     try {
-      const data: { email: string; password: string; name?: string } = { email, password }
-      if (type === "register") {
-        data.name = name
-      }
-      await onSubmit(data)
-      
-      if (type === "register") {
-        toast({
-          title: "Welcome to CivicSense!",
-          description: "Your account has been created successfully.",
-        })
-        router.push("/dashboard")
-      } else {
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully logged in.",
-        })
-        router.push("/dashboard")
-      }
+      await onSubmit({ email: data.email, password: data.password })
+      showSuccessToast("Welcome back!", "You have successfully logged in.")
+      router.push("/dashboard")
     } catch (error: any) {
-      toast({
-        title: type === "login" ? "Login failed" : "Registration failed",
-        description: error.message || "Please try again.",
-        variant: "destructive",
-      })
+      showErrorToast("Login failed", error.message || "Please try again.")
+    }
+  }
+
+  const onRegisterSubmit = async (data: RegisterFormData) => {
+    try {
+      await onSubmit({ email: data.email, password: data.password, name: data.name })
+      showSuccessToast("Welcome to CivicSense!", "Your account has been created successfully.")
+      router.push("/dashboard")
+    } catch (error: any) {
+      showErrorToast("Registration failed", error.message || "Please try again.")
     }
   }
 
   const handleGuestLogin = async () => {
     try {
       await guestLogin()
-      toast({
-        title: "Welcome as Guest!",
-        description: "You are now browsing as a guest user.",
-      })
+      showSuccessToast("Welcome as Guest!", "You are now browsing as a guest user.")
       router.push("/")
     } catch (error: any) {
-      toast({
-        title: "Guest login failed",
-        description: error.message || "Please try again.",
-        variant: "destructive",
-      })
+      showErrorToast("Guest login failed", error.message || "Please try again.")
     }
   }
 
@@ -100,55 +92,88 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {type === "register" && (
+        {type === "login" ? (
+          <form onSubmit={handleLoginSubmit(onLoginSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                {...loginRegister("email")}
+              />
+              {loginErrors.email && <p className="text-sm text-red-500">{String(loginErrors.email.message)}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a password"
+                  {...loginRegister("password")}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                </Button>
+              </div>
+              {loginErrors.password && <p className="text-sm text-red-500">{String(loginErrors.password.message)}</p>}
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
+        ) : (
+          <form onSubmit={handleRegisterSubmit(onRegisterSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
                 type="text"
                 placeholder="Your full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required={type === "register"}
+                {...registerRegister("name")}
               />
+              {registerErrors.name && <p className="text-sm text-red-500">{String(registerErrors.name.message)}</p>}
             </div>
-          )}
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Create a password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                {...registerRegister("email")}
               />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
-              </Button>
+              {registerErrors.email && <p className="text-sm text-red-500">{String(registerErrors.email.message)}</p>}
             </div>
-          </div>
-          {type === "register" && (
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a password"
+                  {...registerRegister("password")}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                </Button>
+              </div>
+              {registerErrors.password && <p className="text-sm text-red-500">{String(registerErrors.password.message)}</p>}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative">
@@ -156,9 +181,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required={type === "register"}
+                  {...registerRegister("confirmPassword")}
                 />
                 <Button
                   type="button"
@@ -171,12 +194,13 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                   <span className="sr-only">{showConfirmPassword ? "Hide password" : "Show password"}</span>
                 </Button>
               </div>
+              {registerErrors.confirmPassword && <p className="text-sm text-red-500">{String(registerErrors.confirmPassword.message)}</p>}
             </div>
-          )}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? (type === "login" ? "Signing in..." : "Creating account...") : (type === "login" ? "Sign In" : "Create Account")}
-          </Button>
-        </form>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Creating account..." : "Create Account"}
+            </Button>
+          </form>
+        )}
         <div className="mt-4 text-center text-sm text-muted-foreground">
           {type === "login" ? "Don't have an account? " : "Already have an account? "}
           <Button 

@@ -1,53 +1,91 @@
-'use client'
+import * as React from "react"
+import { cn } from "@/lib/utils"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import * as React from 'react'
-import * as AvatarPrimitive from '@radix-ui/react-avatar'
+const avatarVariants = cva(
+  "relative flex shrink-0 overflow-hidden rounded-full",
+  {
+    variants: {
+      size: {
+        sm: "h-8 w-8",
+        default: "h-10 w-10",
+        lg: "h-12 w-12",
+        xl: "h-16 w-16",
+      },
+      variant: {
+        default: "bg-muted",
+        ring: "ring-2 ring-primary ring-offset-2",
+        shadow: "shadow-md",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+      variant: "default",
+    },
+  }
+)
 
-import { cn } from '@/lib/utils'
-
-function Avatar({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Root>) {
-  return (
-    <AvatarPrimitive.Root
-      data-slot="avatar"
-      className={cn(
-        'relative flex size-8 shrink-0 overflow-hidden rounded-full',
-        className,
-      )}
-      {...props}
-    />
-  )
+interface AvatarProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    VariantProps<typeof avatarVariants> {
+  src?: string
+  alt?: string
+  fallback?: string
 }
 
-function AvatarImage({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
-  return (
-    <AvatarPrimitive.Image
-      data-slot="avatar-image"
-      className={cn('aspect-square size-full', className)}
-      {...props}
-    />
-  )
+const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
+  ({ className, size, variant, src, alt, fallback, ...props }, ref) => {
+    return (
+      <span
+        ref={ref}
+        className={cn(avatarVariants({ size, variant, className }))}
+        {...props}
+      >
+        {src ? (
+          <img
+            src={src}
+            alt={alt || "Avatar"}
+            className="aspect-square h-full w-full object-cover"
+          />
+        ) : (
+          <AvatarFallback>
+            <div className="flex h-full w-full items-center justify-center bg-muted">
+              <span className="text-sm font-medium">
+                {fallback ? getInitials(fallback) : "U"}
+              </span>
+            </div>
+          </AvatarFallback>
+        )}
+      </span>
+    )
+  }
+)
+Avatar.displayName = "Avatar"
+
+const AvatarFallback = React.forwardRef<
+  HTMLSpanElement,
+  React.HTMLAttributes<HTMLSpanElement>
+>(({ className, ...props }, ref) => (
+  <span
+    ref={ref}
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      className
+    )}
+    {...props}
+  />
+))
+AvatarFallback.displayName = "AvatarFallback"
+
+function getInitials(name: string): string {
+  const names = name.split(" ")
+  let initials = names[0].substring(0, 1).toUpperCase()
+  
+  if (names.length > 1) {
+    initials += names[names.length - 1].substring(0, 1).toUpperCase()
+  }
+  
+  return initials
 }
 
-function AvatarFallback({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
-  return (
-    <AvatarPrimitive.Fallback
-      data-slot="avatar-fallback"
-      className={cn(
-        'bg-muted flex size-full items-center justify-center rounded-full',
-        className,
-      )}
-      {...props}
-    />
-  )
-}
-
-export { Avatar, AvatarImage, AvatarFallback }
+export { Avatar, AvatarFallback, avatarVariants }

@@ -11,10 +11,13 @@ import { Badge } from "@/components/ui/badge"
 import { CameraUploader } from "@/components/media/camera-uploader"
 import { VoiceRecorder } from "@/components/media/voice-recorder"
 import { LocationPicker } from "@/components/location/location-picker"
-import { apiClient, type AIAnalysisResult } from "@/utils/api"
-import { useToast } from "@/hooks/use-toast"
+import { apiClient, type AIAnalysisResult, type CreateReportRequest } from "@/utils/api"
+import { useToastWrapper } from "@/components/ui/toast-wrapper"
 import { useNotificationContext } from "@/components/notifications/notification-provider"
 import { Loader2, Sparkles, Brain } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { reportSchema, type ReportFormData } from "@/lib/form-validation"
 
 interface ReportFormProps {
   onClose: () => void
@@ -27,26 +30,36 @@ interface LocationData {
 }
 
 export function ReportForm({ onClose }: ReportFormProps) {
-  const [formData, setFormData] = useState({
-    description: "",
-    contactInfo: "",
-    anonymous: false,
-    useLocation: true,
-    media: null as File | null,
-  })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [location, setLocation] = useState<LocationData | null>(null)
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [mediaUrl, setMediaUrl] = useState<string | null>(null)
-  const { toast } = useToast()
+  const { showToast, showErrorToast, showSuccessToast } = useToastWrapper()
   const { showNotification } = useNotificationContext()
 
+  const form = useForm<ReportFormData>({
+    resolver: zodResolver(reportSchema),
+    defaultValues: {
+      description: "",
+      anonymous: false,
+      useLocation: true,
+      contactInfo: "",
+      media: undefined,
+    }
+  })
+
+  const { register, handleSubmit, formState: { errors }, watch, setValue } = form
+
+  // Watch form values
+  const useLocationValue = watch("useLocation")
+  const media = watch("media")
+
   useEffect(() => {
-    if (mediaUrl && formData.media?.type.startsWith("image/")) {
+    if (mediaUrl && media && media[0] && media[0] instanceof File && media[0].type.startsWith("image/")) {
       handleAIAnalysis(mediaUrl)
     }
-  }, [mediaUrl])
+  }, [mediaUrl, media])
 
   const handleAIAnalysis = async (url: string) => {
     setIsAnalyzing(true)
@@ -55,43 +68,48 @@ export function ReportForm({ onClose }: ReportFormProps) {
       const analysis = await apiClient.analyzeImage(url)
       setAiAnalysis(analysis)
 
-      if (analysis.suggestedTitle && !formData.description) {
-        setFormData((prev) => ({
-          ...prev,
-          description: analysis.shortDesc || analysis.suggestedTitle,
-        }))
+      // Update description with AI suggestion if available
+      if (analysis.shortDesc) {
+        setValue("description", analysis.shortDesc)
       }
 
-      toast({
-        title: "AI Analysis Complete",
-        description: `Detected: ${analysis.issueType} (${analysis.confidence}% confidence)`,
-        duration: 4000,
-      })
+      showSuccessToast("AI Analysis Complete", `Detected: ${analysis.issueType} (${analysis.confidence}% confidence)`)
     } catch (error) {
       console.error("[v0] AI analysis failed:", error)
-      toast({
-        title: "AI Analysis Failed",
-        description: "Continuing without AI suggestions",
-        variant: "destructive",
-        duration: 3000,
-      })
+      showErrorToast("AI Analysis Failed", "Continuing without AI suggestions")
     } finally {
       setIsAnalyzing(false)
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const onSubmit = async (data: ReportFormData) => {
     setIsSubmitting(true)
 
     try {
-      const reportData = {
-        description: formData.description,
-        contactInfo: formData.contactInfo || undefined,
-        anonymous: formData.anonymous,
-        useLocation: formData.useLocation,
-        media: formData.media || undefined,
-        location: formData.useLocation ? location : undefined,
+      // Build report data object with proper conditional inclusion
+      const reportData: CreateReportRequest = {
+        description: data.description,
+        anonymous: data.anonymous,
+        useLocation: data.useLocation,
+      }
+
+      // Only add contactInfo if provided
+      if (data.contactInfo && data.contactInfo.trim().length > 0) {
+        reportData.contactInfo = data.contactInfo
+      }
+
+      // Only add media if provided
+      if (data.media && data.media.length > 0) {
+        reportData.media = data.media[0]
+      }
+
+      // Only add location if useLocation is true and location data exists
+      if (data.useLocation && location) {
+        reportData.location = {
+          lat: location.lat,
+          lng: location.lng,
+          address: location.address || undefined
+        }
       }
 
       console.log("[v0] Submitting report:", reportData)
@@ -102,9 +120,9 @@ export function ReportForm({ onClose }: ReportFormProps) {
 
       showNotification("report.created", {
         trackingId: response.trackingId,
-        description: formData.description,
+        description: data.description,
         location: location,
-        anonymous: formData.anonymous,
+        anonymous: data.anonymous,
       })
 
       window.dispatchEvent(
@@ -113,9 +131,9 @@ export function ReportForm({ onClose }: ReportFormProps) {
             type: "report.created",
             data: {
               trackingId: response.trackingId,
-              description: formData.description,
+              description: data.description,
               location: location,
-              anonymous: formData.anonymous,
+              anonymous: data.anonymous,
             },
           },
         }),
@@ -124,38 +142,26 @@ export function ReportForm({ onClose }: ReportFormProps) {
       onClose()
     } catch (error) {
       console.error("[v0] Error submitting report:", error)
-
-      toast({
-        title: "Error Submitting Report",
-        description: error instanceof Error ? error.message : "Please try again later.",
-        variant: "destructive",
-        duration: 5000,
-      })
+      showErrorToast("Error Submitting Report", error instanceof Error ? error.message : "Please try again later.")
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const handleMediaSelect = async (file: File | null) => {
-    setFormData((prev) => ({ ...prev, media: file }))
-    setAiAnalysis(null) // Reset previous analysis
-
     if (file) {
       try {
         // Upload media first to get URL for AI analysis
         const uploadResponse = await apiClient.uploadMedia(file)
         setMediaUrl(uploadResponse.url)
+        setValue("media", [file])
       } catch (error) {
         console.error("[v0] Media upload failed:", error)
-        toast({
-          title: "Media Upload Failed",
-          description: "AI analysis will not be available",
-          variant: "destructive",
-          duration: 3000,
-        })
+        showErrorToast("Media Upload Failed", "AI analysis will not be available")
       }
     } else {
       setMediaUrl(null)
+      setValue("media", undefined)
     }
   }
 
@@ -165,7 +171,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
 
   const handleTranscriptionRequest = (audioBlob: Blob) => {
     // Placeholder for transcription - will be implemented in later milestone
-    toast({
+    showToast({
       title: "Transcription Coming Soon",
       description: "Voice-to-text feature will be available in the next update.",
       duration: 3000,
@@ -177,12 +183,12 @@ export function ReportForm({ onClose }: ReportFormProps) {
   }
 
   const handleUseLocationChange = (use: boolean) => {
-    setFormData((prev) => ({ ...prev, useLocation: use }))
+    setValue("useLocation", use)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <CameraUploader onMediaSelect={handleMediaSelect} currentMedia={formData.media} />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <CameraUploader onMediaSelect={handleMediaSelect} currentMedia={media?.[0] || null} />
 
       {(isAnalyzing || aiAnalysis) && (
         <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
@@ -226,7 +232,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
 
       <LocationPicker
         onLocationChange={handleLocationChange}
-        useLocation={formData.useLocation}
+        useLocation={useLocationValue}
         onUseLocationChange={handleUseLocationChange}
       />
 
@@ -244,11 +250,10 @@ export function ReportForm({ onClose }: ReportFormProps) {
         <Textarea
           id="description"
           placeholder="What's the problem? Be as specific as possible..."
-          value={formData.description}
-          onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+          {...register("description")}
           className="min-h-[100px] text-base"
-          required
         />
+        {errors.description && <p className="text-sm text-red-500">{String(errors.description.message)}</p>}
 
         <VoiceRecorder
           onRecordingComplete={handleRecordingComplete}
@@ -258,17 +263,17 @@ export function ReportForm({ onClose }: ReportFormProps) {
 
       {/* Contact Info */}
       <div className="space-y-2">
-        <Label htmlFor="contact" className="text-base font-medium">
+        <Label htmlFor="contactInfo" className="text-base font-medium">
           Contact info (optional)
         </Label>
         <Input
-          id="contact"
+          id="contactInfo"
           type="email"
           placeholder="your.email@example.com"
-          value={formData.contactInfo}
-          onChange={(e) => setFormData((prev) => ({ ...prev, contactInfo: e.target.value }))}
+          {...register("contactInfo")}
           className="text-base"
         />
+        {errors.contactInfo && <p className="text-sm text-red-500">{String(errors.contactInfo.message)}</p>}
         <p className="text-sm text-gray-500">We'll send you updates about your report</p>
       </div>
 
@@ -279,8 +284,8 @@ export function ReportForm({ onClose }: ReportFormProps) {
           <p className="text-sm text-gray-600">Your contact info won't be shared publicly</p>
         </div>
         <Switch
-          checked={formData.anonymous}
-          onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, anonymous: checked }))}
+          checked={watch("anonymous")}
+          onCheckedChange={(checked) => setValue("anonymous", checked)}
         />
       </div>
 
@@ -298,9 +303,16 @@ export function ReportForm({ onClose }: ReportFormProps) {
         <Button
           type="submit"
           className="flex-1 bg-civic-primary hover:bg-civic-accent text-white"
-          disabled={isSubmitting || isAnalyzing}
+          disabled={isSubmitting}
         >
-          {isSubmitting ? "Submitting..." : "Submit Report"}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            "Submit Report"
+          )}
         </Button>
       </div>
     </form>

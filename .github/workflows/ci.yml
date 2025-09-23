@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+
+    - name: Install frontend dependencies
+      run: npm ci
+
+    - name: Install backend dependencies
+      run: |
+        cd scripts
+        npm ci
+        cd ..
+
+    - name: Run frontend linting
+      run: npm run lint
+
+    - name: Run frontend tests
+      run: npm run test:frontend
+
+    - name: Run backend tests
+      run: npm test
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://localhost:27017/civicsense_test
+        JWT_SECRET: test-secret-key-for-ci-environment-minimum-32-chars
+        GUEST_PASSWORD: guest123
+
+    - name: Build frontend
+      run: npm run build
+
+    - name: Run health check
+      run: npm run health
+      env:
+        MONGODB_URI: mongodb://localhost:27017/civicsense
+        JWT_SECRET: test-secret-key-for-ci-environment-minimum-32-chars

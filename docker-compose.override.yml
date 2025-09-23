@@ -1,0 +1,37 @@
+version: '3.8'
+
+# This file is automatically loaded by docker-compose in addition to docker-compose.yml
+# It's used to override settings for local development
+# To use it, run: docker-compose up
+# To use only the base config, run: docker-compose -f docker-compose.yml up
+
+services:
+  # MongoDB database
+  mongo:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: civicsense
+
+  # Backend API server
+  backend:
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MONGODB_URI=mongodb://admin:password123@mongo:27017/civicsense?authSource=admin
+      - JWT_SECRET=development-jwt-secret-change-in-production
+      - GUEST_PASSWORD=guest123
+    volumes:
+      - ./scripts:/app/scripts
+      - ./uploads:/app/uploads
+    command: npm run start:dev
+
+  # Frontend Next.js application
+  frontend:
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://backend:3001
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev

@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+node_modules/
+**/node_modules/
 
 # next.js
 /.next/
@@ -62,3 +64,16 @@ temp/
 
 # Uploads directory (if you want to exclude uploaded files)
 # uploads/
+
+# Additional exclusions for nested directories and files
+**/node_modules/**
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/playwright-report/
+**/test-results/
+**/uploads/
+**/*.jpg
+**/*.png
+.DS_Store
+Thumbs.db

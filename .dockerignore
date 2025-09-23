@@ -1,0 +1,53 @@
+# Dependencies
+node_modules
+scripts/node_modules
+
+# Testing
+__tests__
+e2e
+test-results
+playwright-report
+
+# Build outputs
+.next
+out
+
+# Development files
+.nyc_output
+coverage
+.nyc_output
+
+# Logs
+logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git
+
+# Uploads directory (will be mounted as volume)
+uploads/
+
+# Temporary files
+tmp/
+temp/
+
+# Husky
+.husky/

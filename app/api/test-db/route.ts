@@ -1,9 +1,24 @@
 // app/api/test-db/route.ts
-import connectToDatabase from "@/lib/mongodb";
-import User from "@/lib/models/User";
-
 export async function GET() {
+  // Completely skip this route during build time
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: 'Build phase - skipping database operations',
+      skipped: true
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  // Only attempt database connection during runtime
   try {
+    const { default: connectToDatabase } = await import("@/lib/mongodb");
+    const { default: User } = await import("@/lib/models/User");
+    
     await connectToDatabase();
 
     // test user create
@@ -12,8 +27,18 @@ export async function GET() {
       email: `test${Date.now()}@example.com`,
     });
 
-    return Response.json({ success: true, user });
+    return new Response(JSON.stringify({ success: true, user }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   } catch (err: any) {
-    return Response.json({ success: false, error: err.message }, { status: 500 });
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 }

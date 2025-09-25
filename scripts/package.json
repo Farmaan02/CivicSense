@@ -1,8 +1,8 @@
 {
-  "name": "civicsense-backend",
+  "name": "civicpulse-backend",
   "version": "1.0.0",
   "type": "module",
-  "description": "CivicSense Platform Backend API",
+  "description": "CivicPulse Platform Backend API",
   "main": "backend-server.js",
   "scripts": {
     "start": "node backend-server.js",
@@ -38,6 +38,6 @@
     "india",
     "civic-sense"
   ],
-  "author": "CivicSense Team",
+  "author": "CivicPulse Team",
   "license": "MIT"
 }

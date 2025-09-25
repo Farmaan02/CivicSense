@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -78,10 +78,10 @@ export default function AdminDashboard() {
   // Filters
   const [filters, setFilters] = useState({
     search: "",
-    status: "all", // Updated default value to 'all'
-    priority: "all", // Updated default value to 'all'
-    assignedTo: "all", // Updated default value to 'all'
-    category: "all", // Updated default value to 'all'
+    status: "all",
+    priority: "all",
+    assignedTo: "all",
+    category: "all",
   })
 
   // Load data
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
       }
       loadData()
     }
-  }, [isAuthenticated, authLoading]) // Added authLoading to dependency array
+  }, [isAuthenticated, authLoading])
 
   const loadReports = async () => {
     try {
@@ -213,98 +213,129 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card">
-        <div className="flex h-16 items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <FileText className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <h1 className="text-xl font-semibold text-foreground">CivicSense Admin</h1>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">Welcome, {admin?.profile?.firstName || admin?.username}</div>
-            <Button variant="outline" size="sm" onClick={logout}>
-              Sign Out
-            </Button>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 py-8 md:pl-4">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Admin Dashboard</h1>
+          <p className="text-muted-foreground mt-2 text-lg">Welcome, {admin?.profile?.firstName || admin?.username}</p>
         </div>
-      </header>
+      </div>
 
       {/* Main Content */}
-      <main className="p-6">
+      <main className="px-4 md:px-6 pb-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsContent value="reports">
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Total Reports</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+              <Card className="civic-card hover:shadow-lg transition-all duration-300 border-l-4 border-l-blue-500 group rounded-lg overflow-hidden hover:border-l-blue-600 hover:-translate-y-1">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="p-2 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-200 transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-6">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-blue-600 transform group-hover:scale-105 transition-transform duration-300">{stats.total}</div>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="text-sm font-semibold text-foreground">Total Reports</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Community issues reported</p>
+                  </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">New Reports</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-blue-600">{stats.reported}</div>
+              
+              <Card className="civic-card hover:shadow-lg transition-all duration-300 border-l-4 border-l-green-500 group rounded-lg overflow-hidden hover:border-l-green-600 hover:-translate-y-1">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="p-2 rounded-lg bg-green-100 text-green-600 group-hover:bg-green-200 transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-6">
+                      <span className="text-base">🆕</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-green-600 transform group-hover:scale-105 transition-transform duration-300">{stats.reported}</div>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="text-sm font-semibold text-foreground">New Reports</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Awaiting initial review</p>
+                  </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-orange-600">{stats.inProgress}</div>
+              
+              <Card className="civic-card hover:shadow-lg transition-all duration-300 border-l-4 border-l-orange-500 group rounded-lg overflow-hidden hover:border-l-orange-600 hover:-translate-y-1">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="p-2 rounded-lg bg-orange-100 text-orange-600 group-hover:bg-orange-200 transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-6">
+                      <span className="text-base">🔄</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-orange-600 transform group-hover:scale-105 transition-transform duration-300">{stats.inProgress}</div>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="text-sm font-semibold text-foreground">In Progress</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Currently being addressed</p>
+                  </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Resolved</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
+              
+              <Card className="civic-card hover:shadow-lg transition-all duration-300 border-l-4 border-l-purple-500 group rounded-lg overflow-hidden hover:border-l-purple-600 hover:-translate-y-1">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="p-2 rounded-lg bg-purple-100 text-purple-600 group-hover:bg-purple-200 transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-6">
+                      <span className="text-base">✅</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-purple-600 transform group-hover:scale-105 transition-transform duration-300">{stats.resolved}</div>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="text-sm font-semibold text-foreground">Resolved</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Successfully addressed</p>
+                  </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Urgent</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-red-600">{stats.urgent}</div>
+              
+              <Card className="civic-card hover:shadow-lg transition-all duration-300 border-l-4 border-l-red-500 group rounded-lg overflow-hidden hover:border-l-red-600 hover:-translate-y-1">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="p-2 rounded-lg bg-red-100 text-red-600 group-hover:bg-red-200 transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-6">
+                      <span className="text-base">🚨</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-red-600 transform group-hover:scale-105 transition-transform duration-300">{stats.urgent}</div>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="text-sm font-semibold text-foreground">Urgent</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Require immediate attention</p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Filters */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  Filters
+            <Card className="civic-card mb-8">
+              <CardHeader className="bg-muted/50 rounded-t-xl">
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <Filter className="h-5 w-5" />
+                  <span>Filters</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                   <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                     <Input
                       placeholder="Search reports..."
                       value={filters.search}
                       onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
-                      className="pl-9"
+                      className="pl-10 py-5 rounded-xl civic-input"
                     />
                   </div>
                   <Select
                     value={filters.status}
                     onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl py-5 civic-input">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -320,7 +351,7 @@ export default function AdminDashboard() {
                     value={filters.priority}
                     onValueChange={(value) => setFilters((prev) => ({ ...prev, priority: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl py-5 civic-input">
                       <SelectValue placeholder="Priority" />
                     </SelectTrigger>
                     <SelectContent>
@@ -335,20 +366,21 @@ export default function AdminDashboard() {
                     value={filters.assignedTo}
                     onValueChange={(value) => setFilters((prev) => ({ ...prev, assignedTo: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl py-5 civic-input">
                       <SelectValue placeholder="Assigned To" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Teams</SelectItem>
                       {teams.map((team) => (
                         <SelectItem key={team.id} value={team.id}>
-                          {team.name}
+                          <span className="truncate max-w-[150px]">{team.name}</span>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   <Button
                     variant="outline"
+                    className="rounded-xl py-5 hover:bg-muted transition-colors civic-transition"
                     onClick={() =>
                       setFilters({ search: "", status: "all", priority: "all", assignedTo: "all", category: "all" })
                     }
@@ -360,17 +392,17 @@ export default function AdminDashboard() {
             </Card>
 
             {/* View Toggle and Reports */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Reports ({filteredReports.length})</CardTitle>
+            <Card className="civic-card">
+              <CardHeader className="bg-muted/50 rounded-t-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <CardTitle className="text-lg">Reports ({filteredReports.length})</CardTitle>
                   <Tabs value={view} onValueChange={(value: string) => setView(value as "list" | "map")}>
-                    <TabsList>
-                      <TabsTrigger value="list" className="flex items-center gap-2">
+                    <TabsList className="rounded-xl p-1 bg-muted">
+                      <TabsTrigger value="list" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4 py-2">
                         <List className="h-4 w-4" />
                         List View
                       </TabsTrigger>
-                      <TabsTrigger value="map" className="flex items-center gap-2">
+                      <TabsTrigger value="map" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4 py-2">
                         <MapPin className="h-4 w-4" />
                         Map View
                       </TabsTrigger>
@@ -378,86 +410,94 @@ export default function AdminDashboard() {
                   </Tabs>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 {view === "list" ? (
                   <div className="space-y-4">
                     {loading ? (
-                      <div className="text-center py-8 text-muted-foreground">Loading reports...</div>
+                      <div className="text-center py-12 text-muted-foreground">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                        Loading reports...
+                      </div>
                     ) : filteredReports.length === 0 ? (
-                      <div className="text-center py-8 text-muted-foreground">No reports found</div>
+                      <div className="text-center py-12 text-muted-foreground">
+                        <p className="text-lg">No reports found</p>
+                        <p className="text-sm mt-2">Try adjusting your filters to see more results</p>
+                      </div>
                     ) : (
                       filteredReports.map((report) => (
                         <Card 
                           key={generateReportKey(report)} 
-                          className="hover:shadow-md transition-shadow"
+                          className="civic-card transition-all duration-300 border-l-4 border-l-blue-500 hover:border-l-blue-600 group"
                         >
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <h3 className="font-semibold">{report.trackingId}</h3>
-                                  <Badge className={statusColors[report.status]}>
+                          <CardContent className="p-6">
+                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                              <div className="flex-1 min-w-0"> {/* Added min-w-0 to prevent flexbox overflow */}
+                                <div className="flex flex-wrap items-center gap-3 mb-3">
+                                  <h3 className="font-bold text-lg truncate">{report.trackingId}</h3>
+                                  <Badge className={`${statusColors[report.status]} font-medium px-3 py-1 rounded-full`}>
                                     {report.status.replace("-", " ")}
                                   </Badge>
-                                  <Badge className={priorityColors[report.priority]}>{report.priority}</Badge>
+                                  <Badge className={`${priorityColors[report.priority]} font-medium px-3 py-1 rounded-full`}>
+                                    {report.priority.charAt(0).toUpperCase() + report.priority.slice(1)}
+                                  </Badge>
                                 </div>
-                                <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                                <p className="text-muted-foreground mb-4 line-clamp-2 break-words">
                                   {report.description}
                                 </p>
-                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                  <span className="flex items-center gap-1">
-                                    <Calendar className="h-3 w-3" />
-                                    {new Date(report.createdAt).toLocaleDateString()}
+                                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                                  <span className="flex items-center gap-1 flex-shrink-0">
+                                    <Calendar className="h-4 w-4" />
+                                    <span className="whitespace-nowrap">{new Date(report.createdAt).toLocaleDateString()}</span>
                                   </span>
                                   {report.assignedTo && (
-                                    <span className="flex items-center gap-1">
-                                      <UserCheck className="h-3 w-3" />
-                                      {teams.find((t) => t.id === report.assignedTo)?.name || "Unknown Team"}
+                                    <span className="flex items-center gap-1 flex-shrink-0">
+                                      <UserCheck className="h-4 w-4" />
+                                      <span className="truncate max-w-[150px]">{teams.find((t) => t.id === report.assignedTo)?.name || "Unknown Team"}</span>
                                     </span>
                                   )}
                                   {report.location && (
-                                    <span className="flex items-center gap-1">
-                                      <MapPin className="h-3 w-3" />
-                                      Location Available
+                                    <span className="flex items-center gap-1 flex-shrink-0">
+                                      <MapPin className="h-4 w-4" />
+                                      <span className="truncate max-w-[150px]">Location Available</span>
                                     </span>
                                   )}
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2 flex-shrink-0">
                                 <Dialog>
                                   <DialogTrigger asChild>
-                                    <Button variant="outline" size="sm">
+                                    <Button variant="outline" size="sm" className="rounded-lg hover:bg-muted civic-transition">
                                       <Eye className="h-4 w-4" />
                                     </Button>
                                   </DialogTrigger>
-                                  <DialogContent className="max-w-2xl">
+                                  <DialogContent className="max-w-2xl rounded-xl">
                                     <DialogHeader>
-                                      <DialogTitle>{report.trackingId}</DialogTitle>
+                                      <DialogTitle className="text-xl break-words">{report.trackingId}</DialogTitle>
                                       <DialogDescription>Report Details</DialogDescription>
                                     </DialogHeader>
-                                    <div className="space-y-4">
+                                    <div className="space-y-6 py-4">
                                       <div>
-                                        <Label>Description</Label>
-                                        <p className="text-sm mt-1">{report.description}</p>
+                                        <Label className="text-base">Description</Label>
+                                        <p className="text-muted-foreground mt-2 break-words">{report.description}</p>
                                       </div>
-                                      <div className="grid grid-cols-2 gap-4">
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                          <Label>Status</Label>
-                                          <Badge className={`${statusColors[report.status]} mt-1`}>
+                                          <Label className="text-base">Status</Label>
+                                          <Badge className={`${statusColors[report.status]} mt-2 text-sm font-medium px-3 py-1 rounded-full`}>
                                             {report.status.replace("-", " ")}
                                           </Badge>
                                         </div>
                                         <div>
-                                          <Label>Priority</Label>
-                                          <Badge className={`${priorityColors[report.priority]} mt-1`}>
+                                          <Label className="text-base">Priority</Label>
+                                          <Badge className={`${priorityColors[report.priority]} mt-2 text-sm font-medium px-3 py-1 rounded-full`}>
                                             {report.priority}
                                           </Badge>
                                         </div>
                                       </div>
                                       {report.location && (
                                         <div>
-                                          <Label>Location</Label>
-                                          <p className="text-sm mt-1">
+                                          <Label className="text-base">Location</Label>
+                                          <p className="text-muted-foreground mt-2 break-words">
                                             {report.location.address ||
                                               `${report.location.lat}, ${report.location.lng}`}
                                           </p>
@@ -465,12 +505,12 @@ export default function AdminDashboard() {
                                       )}
                                       {report.updates.length > 0 && (
                                         <div>
-                                          <Label>Updates</Label>
-                                          <div className="space-y-2 mt-2">
+                                          <Label className="text-base">Updates</Label>
+                                          <div className="space-y-3 mt-2">
                                             {report.updates.map((update, index) => (
-                                              <div key={index} className="text-sm border-l-2 border-muted pl-3">
-                                                <p>{update.message}</p>
-                                                <p className="text-xs text-muted-foreground">
+                                              <div key={index} className="text-sm border-l-4 border-muted pl-4 py-2 bg-muted/50 rounded-r-lg">
+                                                <p className="font-medium break-words">{update.message}</p>
+                                                <p className="text-xs text-muted-foreground mt-1">
                                                   {update.createdBy} • {new Date(update.createdAt).toLocaleString()}
                                                 </p>
                                               </div>
@@ -485,6 +525,7 @@ export default function AdminDashboard() {
                                 <Button
                                   variant="outline"
                                   size="sm"
+                                  className="rounded-lg hover:bg-muted civic-transition"
                                   onClick={() => {
                                     setSelectedReport(report)
                                     setIsAssignDialogOpen(true)
@@ -496,6 +537,7 @@ export default function AdminDashboard() {
                                 <Button
                                   variant="outline"
                                   size="sm"
+                                  className="rounded-lg hover:bg-muted civic-transition"
                                   onClick={() => {
                                     setSelectedReport(report)
                                     setStatusData({ status: report.status, note: "" })
@@ -512,7 +554,7 @@ export default function AdminDashboard() {
                     )}
                   </div>
                 ) : (
-                  <div className="h-96">
+                  <div className="h-[500px] rounded-xl overflow-hidden border shadow-sm">
                     <ReportsMap reports={filteredReports.filter((r) => r.location) as any[]} />
                   </div>
                 )}
@@ -532,9 +574,9 @@ export default function AdminDashboard() {
 
       {/* Assignment Dialog */}
       <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl rounded-xl">
           <DialogHeader>
-            <DialogTitle>Assign Report</DialogTitle>
+            <DialogTitle className="text-xl">Assign Report</DialogTitle>
             <DialogDescription>Assign {selectedReport?.trackingId} to a team</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -552,7 +594,7 @@ export default function AdminDashboard() {
                     .filter((team) => team.canTakeAssignment)
                     .map((team) => (
                       <SelectItem key={team.id} value={team.id}>
-                        {team.name} ({team.availableCapacity} available)
+                        <div className="break-words max-w-[250px] truncate">{team.name} ({team.availableCapacity} available)</div>
                       </SelectItem>
                     ))}
                 </SelectContent>
@@ -565,6 +607,7 @@ export default function AdminDashboard() {
                 placeholder="Add any notes about this assignment..."
                 value={assignmentData.note}
                 onChange={(e) => setAssignmentData((prev) => ({ ...prev, note: e.target.value }))}
+                className="resize-none"
               />
             </div>
             <div className="flex justify-end gap-2">
@@ -581,9 +624,9 @@ export default function AdminDashboard() {
 
       {/* Status Update Dialog */}
       <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl rounded-xl">
           <DialogHeader>
-            <DialogTitle>Update Status</DialogTitle>
+            <DialogTitle className="text-xl">Update Status</DialogTitle>
             <DialogDescription>Update the status of {selectedReport?.trackingId}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -612,6 +655,7 @@ export default function AdminDashboard() {
                 placeholder="Add any notes about this status change..."
                 value={statusData.note}
                 onChange={(e) => setStatusData((prev) => ({ ...prev, note: e.target.value }))}
+                className="resize-none"
               />
             </div>
             <div className="flex justify-end gap-2">

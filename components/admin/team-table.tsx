@@ -62,7 +62,7 @@ export function TeamTable({ teams }: TeamTableProps) {
                 <CardContent className="p-4">
                   <div className="space-y-3">
                     <div>
-                      <h3 className="font-semibold text-sm">{team.name}</h3>
+                      <h3 className="font-semibold text-sm truncate max-w-[200px]">{team.name}</h3>
                       <Badge
                         className={
                           departmentColors[team.department as keyof typeof departmentColors] ||

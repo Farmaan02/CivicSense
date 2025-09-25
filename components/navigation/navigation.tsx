@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card"
 import { useAuth } from "@/lib/auth"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { LanguageToggle } from "@/components/language-toggle"
-import { CivicSenseSVGLogo } from "@/components/ui/svg-logo"
+import { CivicPulseSVGLogo } from "@/components/ui/svg-logo"
 import { useTranslation } from "@/lib/i18n"
 import {
   DropdownMenu,
@@ -46,7 +46,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <CivicSenseSVGLogo size={40} variant="horizontal" />
+            <CivicPulseSVGLogo size={40} variant="horizontal" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -96,11 +96,11 @@ export function Navigation() {
               </DropdownMenu>
             ) : (
               <div className="hidden md:flex items-center gap-2">
-                <Button variant="ghost" asChild>
-                  <Link href="/login">{t("signIn")}</Link>
+                <Button variant="ghost" onClick={() => window.location.href = '/login'}>
+                  {t("signIn")}
                 </Button>
-                <Button asChild>
-                  <Link href="/register">{t("signUp")}</Link>
+                <Button onClick={() => window.location.href = '/register'}>
+                  {t("signUp")}
                 </Button>
               </div>
             )}

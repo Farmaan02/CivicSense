@@ -56,9 +56,9 @@ export default function UIKitPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">CivicSense UI Kit</h1>
+          <h1 className="text-3xl font-bold">CivicPulse UI Kit</h1>
           <p className="text-muted-foreground mt-2">
-            Modernized component library for the CivicSense application
+            Modernized component library for the CivicPulse application
           </p>
         </div>
 

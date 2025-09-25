@@ -62,7 +62,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
   const onRegisterSubmit = async (data: RegisterFormData) => {
     try {
       await onSubmit({ email: data.email, password: data.password, name: data.name })
-      showSuccessToast("Welcome to CivicSense!", "Your account has been created successfully.")
+      showSuccessToast("Welcome to CivicPulse!", "Your account has been created successfully.")
       router.push("/dashboard")
     } catch (error: any) {
       showErrorToast("Registration failed", error.message || "Please try again.")
@@ -80,15 +80,15 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto civic-card">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-primary">
           {type === "login" ? "Sign In" : "Create Account"}
         </CardTitle>
         <CardDescription>
           {type === "login" 
-            ? "Welcome back to CivicSense" 
-            : "Join CivicSense to start reporting issues in your community"}
+            ? "Welcome back to CivicPulse" 
+            : "Join CivicPulse to start reporting issues in your community"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -101,6 +101,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                 type="email"
                 placeholder="your@email.com"
                 {...loginRegister("email")}
+                className="civic-input"
               />
               {loginErrors.email && <p className="text-sm text-red-500">{String(loginErrors.email.message)}</p>}
             </div>
@@ -112,12 +113,13 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a password"
                   {...loginRegister("password")}
+                  className="civic-input pl-10"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 hover:bg-muted rounded-full"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -126,7 +128,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
               </div>
               {loginErrors.password && <p className="text-sm text-red-500">{String(loginErrors.password.message)}</p>}
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full civic-button" disabled={loading}>
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
@@ -139,6 +141,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                 type="text"
                 placeholder="Your full name"
                 {...registerRegister("name")}
+                className="civic-input"
               />
               {registerErrors.name && <p className="text-sm text-red-500">{String(registerErrors.name.message)}</p>}
             </div>
@@ -149,6 +152,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                 type="email"
                 placeholder="your@email.com"
                 {...registerRegister("email")}
+                className="civic-input"
               />
               {registerErrors.email && <p className="text-sm text-red-500">{String(registerErrors.email.message)}</p>}
             </div>
@@ -160,12 +164,13 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a password"
                   {...registerRegister("password")}
+                  className="civic-input pl-10"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 hover:bg-muted rounded-full"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -182,12 +187,13 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   {...registerRegister("confirmPassword")}
+                  className="civic-input pl-10"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 hover:bg-muted rounded-full"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -196,7 +202,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
               </div>
               {registerErrors.confirmPassword && <p className="text-sm text-red-500">{String(registerErrors.confirmPassword.message)}</p>}
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full civic-button" disabled={loading}>
               {loading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
@@ -214,7 +220,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
         <div className="mt-4">
           <Button 
             variant="outline" 
-            className="w-full" 
+            className="w-full civic-button" 
             onClick={handleGuestLogin}
             disabled={loading}
           >

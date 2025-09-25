@@ -38,18 +38,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check for existing session
-    const token = localStorage.getItem("auth_token")
-    const storedUser = localStorage.getItem("civiccare_user")
-    
-    if (token && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser)
-        setUser(parsedUser)
-      } catch (e) {
-        console.error("Failed to parse stored user", e)
-        localStorage.removeItem("civiccare_user")
-        localStorage.removeItem("auth_token")
+    // Check for existing session - only run on client side
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("auth_token")
+      const storedUser = localStorage.getItem("civiccare_user")
+      
+      if (token && storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser)
+          setUser(parsedUser)
+        } catch (e) {
+          console.error("Failed to parse stored user", e)
+          localStorage.removeItem("civiccare_user")
+          localStorage.removeItem("auth_token")
+        }
       }
     }
     setLoading(false)
@@ -60,8 +62,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await api.login(email, password)
       setUser(response.user)
-      localStorage.setItem("auth_token", response.token)
-      localStorage.setItem("civiccare_user", JSON.stringify(response.user))
+      if (typeof window !== "undefined") {
+        localStorage.setItem("auth_token", response.token)
+        localStorage.setItem("civiccare_user", JSON.stringify(response.user))
+      }
     } catch (error) {
       throw new Error("Invalid credentials")
     } finally {
@@ -74,8 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await api.signup(email, password, name)
       setUser(response.user)
-      localStorage.setItem("auth_token", response.token)
-      localStorage.setItem("civiccare_user", JSON.stringify(response.user))
+      if (typeof window !== "undefined") {
+        localStorage.setItem("auth_token", response.token)
+        localStorage.setItem("civiccare_user", JSON.stringify(response.user))
+      }
     } catch (error: any) {
       throw new Error(error.message || "Registration failed")
     } finally {
@@ -95,8 +101,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         createdAt: new Date().toISOString()
       }
       setUser(guestUser)
-      localStorage.setItem("auth_token", response.token)
-      localStorage.setItem("civiccare_user", JSON.stringify(guestUser))
+      if (typeof window !== "undefined") {
+        localStorage.setItem("auth_token", response.token)
+        localStorage.setItem("civiccare_user", JSON.stringify(guestUser))
+      }
     } catch (error: any) {
       throw new Error(error.message || "Guest login failed")
     } finally {
@@ -106,8 +114,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("civiccare_user")
-    localStorage.removeItem("auth_token")
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("civiccare_user")
+      localStorage.removeItem("auth_token")
+    }
   }
 
   return <AuthContext.Provider value={{ user, login, register, logout, loading, guestLogin }}>{children}</AuthContext.Provider>

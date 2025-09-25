@@ -1,16 +1,16 @@
 import jwt from "jsonwebtoken"
 
 // Enhanced JWT secret management with validation
-const JWT_SECRET = process.env.JWT_SECRET || "civicsense-admin-secret-key"
+const JWT_SECRET = process.env.JWT_SECRET || "civicpulse-admin-secret-key"
 
 // Log JWT secret status for debugging (only in development)
 if (process.env.NODE_ENV !== 'production') {
-  console.log(`[CivicSense Middleware] JWT Secret: ${JWT_SECRET.substring(0, 10)}...${JWT_SECRET.length > 20 ? JWT_SECRET.substring(JWT_SECRET.length - 10) : ''} (length: ${JWT_SECRET.length})`)
+  console.log(`[CivicPulse Middleware] JWT Secret: ${JWT_SECRET.substring(0, 10)}...${JWT_SECRET.length > 20 ? JWT_SECRET.substring(JWT_SECRET.length - 10) : ''} (length: ${JWT_SECRET.length})`)
 }
 
 // Validate JWT secret
 if (JWT_SECRET.length < 16) {
-  console.warn('[CivicSense] WARNING: JWT secret is too short. Consider using a stronger secret in production.')
+  console.warn('[CivicPulse] WARNING: JWT secret is too short. Consider using a stronger secret in production.')
 }
 
 // Global admin storage - will be shared across modules
@@ -19,7 +19,7 @@ if (!global.admins) {
     {
       id: "1",
       username: "admin",
-      email: "admin@civicsense.local",
+      email: "admin@civicpulse.local",
       password: "$2a$10$y44LPR5LnfUkDaeIGoJ.4emvflpoYDPEUL6HG7hvB3fUtZozRw/w6", // 'admin123' hashed
       role: "super-admin",
       permissions: [
@@ -44,7 +44,7 @@ if (!global.admins) {
     {
       id: "2",
       username: "moderator",
-      email: "moderator@civicsense.local",
+      email: "moderator@civicpulse.local",
       password: "$2a$10$snXtGl/N1EN/JVZEPxC/5OHO8zAKiI.YL8H08/vEfsaF5HG.5gBti", // 'mod123' hashed
       role: "moderator",
       permissions: ["view-reports", "assign-reports", "update-status"],

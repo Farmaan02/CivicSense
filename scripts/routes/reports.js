@@ -184,7 +184,7 @@ router.post("/", upload.single("media"), async (req, res) => {
       // MongoDB is connected
       const report = new Report(reportData)
       savedReport = await report.save()
-      console.log(`[CivicSense] Enhanced report saved to database: ${trackingId}`)
+      console.log(`[CivicPulse] Enhanced report saved to database: ${trackingId}`)
     } else {
       // Fallback to in-memory (this shouldn't happen if backend server is properly configured)
       const reportId = Date.now().toString()
@@ -201,14 +201,14 @@ router.post("/", upload.single("media"), async (req, res) => {
         global.reports.push(savedReport)
       }
       
-      console.log(`[CivicSense] Enhanced report created in-memory: ${trackingId}`)
+      console.log(`[CivicPulse] Enhanced report created in-memory: ${trackingId}`)
     }
 
     if (parsedLocation) {
-      console.log(`[CivicSense] Location: ${parsedLocation.lat}, ${parsedLocation.lng}`)
+      console.log(`[CivicPulse] Location: ${parsedLocation.lat}, ${parsedLocation.lng}`)
     }
     if (req.file) {
-      console.log(`[CivicSense] Media attached: ${req.file.filename}`)
+      console.log(`[CivicPulse] Media attached: ${req.file.filename}`)
     }
 
     // Return enhanced response

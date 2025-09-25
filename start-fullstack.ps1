@@ -1,5 +1,5 @@
-# CivicSense Fullstack Startup Script
-Write-Host "🚀 Starting CivicSense Fullstack Application..." -ForegroundColor Green
+# CivicPulse Fullstack Startup Script
+Write-Host "🚀 Starting CivicPulse Fullstack Application..." -ForegroundColor Green
 
 # Kill any existing node processes
 Write-Host "🔄 Stopping existing processes..." -ForegroundColor Yellow
@@ -22,7 +22,7 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'C:\Users\farm
 # Wait for frontend to start
 Start-Sleep -Seconds 5
 
-Write-Host "✅ CivicSense Fullstack Application Started!" -ForegroundColor Green
+Write-Host "✅ CivicPulse Fullstack Application Started!" -ForegroundColor Green
 Write-Host "📱 Frontend: http://localhost:3000" -ForegroundColor White
 Write-Host "🔧 Backend: http://localhost:3001" -ForegroundColor White
 Write-Host "🌐 You can now access your application!" -ForegroundColor Yellow

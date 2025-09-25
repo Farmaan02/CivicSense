@@ -1,8 +1,8 @@
-# CivicSense Full End-to-End Fix and Hardening Pass - Final Summary
+# CivicPulse Full End-to-End Fix and Hardening Pass - Final Summary
 
 ## Overview
 
-This PR implements a comprehensive fix and hardening pass for the CivicSense application to ensure stability, predictability, and deployability with zero runtime errors. All acceptance criteria have been met.
+This PR implements a comprehensive fix and hardening pass for the CivicPulse application to ensure stability, predictability, and deployability with zero runtime errors. All acceptance criteria have been met.
 
 ## ✅ Completed Tasks
 

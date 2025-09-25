@@ -11,11 +11,11 @@ const admins = global.admins
 
 // JWT secret (use environment variable in production)
 // Enhanced secret management with validation
-const JWT_SECRET = process.env.JWT_SECRET || "civicsense-admin-secret-key"
+const JWT_SECRET = process.env.JWT_SECRET || "civicpulse-admin-secret-key"
 
 // Log JWT secret status for debugging (only in development)
 if (process.env.NODE_ENV !== 'production') {
-  console.log(`[CivicSense Auth] JWT Secret: ${JWT_SECRET.substring(0, 10)}...${JWT_SECRET.length > 20 ? JWT_SECRET.substring(JWT_SECRET.length - 10) : ''} (length: ${JWT_SECRET.length})`)
+  console.log(`[CivicPulse Auth] JWT Secret: ${JWT_SECRET.substring(0, 10)}...${JWT_SECRET.length > 20 ? JWT_SECRET.substring(JWT_SECRET.length - 10) : ''} (length: ${JWT_SECRET.length})`)
 }
 
 // Helper function to generate JWT token

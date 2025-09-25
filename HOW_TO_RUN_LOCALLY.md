@@ -1,6 +1,6 @@
-# How to Run CivicSense Locally
+# How to Run CivicPulse Locally
 
-This guide provides detailed instructions for running the CivicSense application locally in development mode.
+This guide provides detailed instructions for running the CivicPulse application locally in development mode.
 
 ## Prerequisites
 

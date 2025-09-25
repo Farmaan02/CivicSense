@@ -1,13 +1,11 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Design System Tokens - CivicSense Modern */
+  /* Design System Tokens - CivicPulse Modern */
   
-  /* Color Palette - Semantic */
+  /* Enhanced Color Palette - Semantic with better accessibility contrast */
   --color-primary-50: #f0f9ff;
   --color-primary-100: #e0f2fe;
   --color-primary-200: #bae6fd;
@@ -20,17 +18,17 @@
   --color-primary-900: #0c4a6e;
   --color-primary-950: #082f49;
   
-  --color-secondary-50: #fff7ed;
-  --color-secondary-100: #ffedd5;
-  --color-secondary-200: #fed7aa;
-  --color-secondary-300: #fdba74;
-  --color-secondary-400: #fb923c;
-  --color-secondary-500: #f97316;
-  --color-secondary-600: #ea580c;
-  --color-secondary-700: #c2410c;
-  --color-secondary-800: #9a3412;
-  --color-secondary-900: #7c2d12;
-  --color-secondary-950: #431407;
+  --color-secondary-50: #fffbf5;
+  --color-secondary-100: #fff4e0;
+  --color-secondary-200: #fee7b9;
+  --color-secondary-300: #fdd58a;
+  --color-secondary-400: #fcbf58;
+  --color-secondary-500: #faa82e;
+  --color-secondary-600: #ec8c1d;
+  --color-secondary-700: #c46614;
+  --color-secondary-800: #9c5015;
+  --color-secondary-900: #7e4115;
+  --color-secondary-950: #462109;
   
   --color-success-50: #f0fdf4;
   --color-success-100: #dcfce7;
@@ -69,16 +67,16 @@
   --color-error-950: #450a0a;
   
   --color-neutral-50: #fafafa;
-  --color-neutral-100: #f5f5f5;
-  --color-neutral-200: #e5e5e5;
-  --color-neutral-300: #d4d4d4;
-  --color-neutral-400: #a3a3a3;
-  --color-neutral-500: #737373;
-  --color-neutral-600: #525252;
-  --color-neutral-700: #404040;
-  --color-neutral-800: #262626;
-  --color-neutral-900: #171717;
-  --color-neutral-950: #0a0a0a;
+  --color-neutral-100: #f4f4f5;
+  --color-neutral-200: #e4e4e7;
+  --color-neutral-300: #d4d4d8;
+  --color-neutral-400: #a1a1aa;
+  --color-neutral-500: #71717a;
+  --color-neutral-600: #52525b;
+  --color-neutral-700: #3f3f46;
+  --color-neutral-800: #27272a;
+  --color-neutral-900: #18181b;
+  --color-neutral-950: #09090b;
   
   /* Semantic Color Tokens */
   --background: var(--color-neutral-50);
@@ -114,7 +112,7 @@
   --sidebar-border: var(--color-neutral-200);
   --sidebar-ring: var(--color-primary-500);
 
-  /* CivicSense Custom Tokens */
+  /* CivicPulse Custom Tokens */
   --civic-primary: var(--color-primary-600);
   --civic-accent: var(--color-secondary-500);
   --civic-light: var(--color-primary-50);
@@ -123,7 +121,7 @@
   --civic-warning: var(--color-warn-500);
   --civic-error: var(--color-error-500);
 
-  /* Typography Scale */
+  /* Enhanced Typography Scale with better hierarchy and accessibility */
   --font-size-xs: 0.75rem;    /* 12px */
   --font-size-sm: 0.875rem;   /* 14px */
   --font-size-base: 1rem;     /* 16px */
@@ -133,8 +131,10 @@
   --font-size-3xl: 1.875rem;  /* 30px */
   --font-size-4xl: 2.25rem;   /* 36px */
   --font-size-5xl: 3rem;      /* 48px */
+  --font-size-6xl: 3.75rem;   /* 60px */
+  --font-size-7xl: 4.5rem;    /* 72px */
 
-  /* Spacing Scale (8pt grid) */
+  /* Enhanced Spacing Scale (8pt grid) */
   --spacing-0: 0;
   --spacing-1: 0.25rem;  /* 4px */
   --spacing-2: 0.5rem;   /* 8px */
@@ -148,27 +148,40 @@
   --spacing-10: 2.5rem;  /* 40px */
   --spacing-11: 2.75rem; /* 44px */
   --spacing-12: 3rem;    /* 48px */
+  --spacing-14: 3.5rem;  /* 56px */
+  --spacing-16: 4rem;    /* 64px */
+  --spacing-20: 5rem;    /* 80px */
+  --spacing-24: 6rem;    /* 96px */
+  --spacing-28: 7rem;    /* 112px */
+  --spacing-32: 8rem;    /* 128px */
 
-  /* Border Radius Tokens */
-  --radius-sm: 0.25rem;  /* 4px */
-  --radius-md: 0.5rem;   /* 8px */
-  --radius-lg: 0.75rem;  /* 12px */
-  --radius-xl: 1rem;     /* 16px */
-  --radius-2xl: 1.5rem;  /* 24px */
-  --radius-3xl: 2rem;    /* 32px */
+  /* Enhanced Border Radius Tokens */
+  --radius-xs: 0.125rem;  /* 2px */
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-3xl: 2rem;     /* 32px */
+  --radius-full: 9999px;
 
-  /* Shadow Tokens */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  /* Enhanced Shadow Tokens with softer, more modern shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  --shadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.2);
 
-  /* Transition Tokens */
-  --transition-fast: 150ms;
-  --transition-normal: 300ms;
-  --transition-slow: 500ms;
+  /* Enhanced Transition Tokens */
+  --transition-xs: 100ms;
+  --transition-sm: 150ms;
+  --transition-md: 200ms;
+  --transition-lg: 300ms;
+  --transition-xl: 400ms;
+  --transition-2xl: 500ms;
+  --transition-3xl: 700ms;
 }
 
 .dark {
@@ -201,8 +214,8 @@
   --sidebar-ring: var(--color-primary-400);
 }
 
-@theme inline {
-  --font-sans: var(--font-geist-sans);
+@theme {
+  --font-sans: 'Inter', var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   
   /* Color Tokens */
@@ -238,8 +251,11 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-success: var(--civic-success);
+  --color-warning: var(--civic-warning);
+  --color-error: var(--civic-error);
 
-  /* CivicSense Custom Color Utilities */
+  /* CivicPulse Custom Color Utilities */
   --color-civic-primary: var(--civic-primary);
   --color-civic-accent: var(--civic-accent);
   --color-civic-light: var(--civic-light);
@@ -258,6 +274,8 @@
   --text-3xl: var(--font-size-3xl);
   --text-4xl: var(--font-size-4xl);
   --text-5xl: var(--font-size-5xl);
+  --text-6xl: var(--font-size-6xl);
+  --text-7xl: var(--font-size-7xl);
 
   /* Spacing Scale */
   --space-0: var(--spacing-0);
@@ -273,14 +291,22 @@
   --space-10: var(--spacing-10);
   --space-11: var(--spacing-11);
   --space-12: var(--spacing-12);
+  --space-14: var(--spacing-14);
+  --space-16: var(--spacing-16);
+  --space-20: var(--spacing-20);
+  --space-24: var(--spacing-24);
+  --space-28: var(--spacing-28);
+  --space-32: var(--spacing-32);
 
   /* Border Radius */
+  --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
   --radius-2xl: var(--radius-2xl);
   --radius-3xl: var(--radius-3xl);
+  --radius-full: var(--radius-full);
 
   /* Shadows */
   --shadow-xs: var(--shadow-xs);
@@ -289,11 +315,16 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+  --shadow-3xl: var(--shadow-3xl);
 
   /* Transitions */
-  --transition-fast: var(--transition-fast);
-  --transition-normal: var(--transition-normal);
-  --transition-slow: var(--transition-slow);
+  --transition-xs: var(--transition-xs);
+  --transition-sm: var(--transition-sm);
+  --transition-md: var(--transition-md);
+  --transition-lg: var(--transition-lg);
+  --transition-xl: var(--transition-xl);
+  --transition-2xl: var(--transition-2xl);
+  --transition-3xl: var(--transition-3xl);
 }
 
 @layer base {
@@ -315,21 +346,278 @@
     @apply outline outline-2 outline-ring outline-offset-2 ring-0;
   }
   
-  /* Smooth transitions */
+  /* Enhanced smooth transitions */
   * {
     @apply transition-colors duration-200 ease-in-out;
   }
+  
+  /* Scrollbar styling for better UX */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+  
+  /* Reduced motion support for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --color-neutral-900: #000000;
+      --color-neutral-50: #ffffff;
+    }
+  }
+  
+  /* Typography hierarchy */
+  h1 {
+    @apply text-4xl font-bold leading-tight tracking-tight;
+  }
+  
+  h2 {
+    @apply text-3xl font-bold leading-tight tracking-tight;
+  }
+  
+  h3 {
+    @apply text-2xl font-semibold leading-snug tracking-tight;
+  }
+  
+  h4 {
+    @apply text-xl font-semibold leading-snug;
+  }
+  
+  h5 {
+    @apply text-lg font-medium leading-snug;
+  }
+  
+  h6 {
+    @apply text-base font-medium leading-normal;
+  }
+  
+  p {
+    @apply text-base leading-relaxed;
+  }
+  
+  small {
+    @apply text-sm;
+  }
+  
+  .lead {
+    @apply text-xl text-muted-foreground;
+  }
+  
+  .large {
+    @apply text-lg font-semibold;
+  }
+  
+  .small {
+    @apply text-sm font-medium leading-none;
+  }
+  
+  .muted {
+    @apply text-muted-foreground;
+  }
 }
 
-/* Custom utility classes */
+/* Enhanced Custom utility classes */
 @utility civic-gradient {
   background: linear-gradient(135deg, var(--civic-primary) 0%, var(--civic-accent) 100%);
 }
 
 @utility civic-card {
-  @apply bg-card rounded-2xl border shadow-md p-6;
+  @apply bg-card rounded-2xl border shadow-md p-6 transition-all duration-300 hover:shadow-lg;
 }
 
 @utility civic-button {
   @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+}
+
+@utility civic-input {
+  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility civic-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+@utility civic-shadow {
+  @apply shadow-lg transition-shadow duration-300 hover:shadow-xl;
+}
+
+/* Skip to main content link for accessibility */
+@utility skip-link {
+  @apply absolute left-[-999px] top-auto z-50 m-4 h-10 rounded-md bg-primary px-4 py-2 text-primary-foreground shadow-lg transition-all duration-200 focus:left-0 focus:z-50;
+}
+
+/* Custom animation utilities */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@utility animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@utility animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+@utility animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+
+/* Enhanced card utilities */
+@utility civic-card-hover {
+  @apply transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl;
+}
+
+@utility civic-card-primary {
+  @apply border-t-4 border-t-primary;
+}
+
+@utility civic-card-secondary {
+  @apply border-t-4 border-t-secondary;
+}
+
+@utility civic-card-success {
+  @apply border-t-4 border-t-success;
+}
+
+@utility civic-card-warning {
+  @apply border-t-4 border-t-warning;
+}
+
+@utility civic-card-error {
+  @apply border-t-4 border-t-error;
+}
+
+/* Enhanced button utilities */
+@utility civic-button-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+@utility civic-button-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/90;
+}
+
+@utility civic-button-outline {
+  @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+}
+
+@utility civic-button-ghost {
+  @apply hover:bg-accent hover:text-accent-foreground;
+}
+
+@utility civic-button-link {
+  @apply text-primary underline-offset-4 hover:underline;
+}
+
+/* Enhanced layout utilities */
+@utility civic-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+@utility civic-section {
+  @apply py-12 sm:py-16 lg:py-20;
+}
+
+@utility civic-section-header {
+  @apply text-center mb-12 sm:mb-16;
+}
+
+@utility civic-section-title {
+  @apply text-3xl font-bold sm:text-4xl lg:text-5xl;
+}
+
+@utility civic-section-description {
+  @apply mt-4 text-lg text-muted-foreground max-w-3xl mx-auto;
+}
+
+/* Professional UI enhancements */
+@utility civic-gradient-text {
+  background: linear-gradient(135deg, var(--civic-primary) 0%, var(--civic-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@utility civic-card-interactive {
+  @apply bg-card rounded-2xl border shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+}
+
+@utility civic-card-stat {
+  @apply bg-card rounded-2xl border shadow-md p-6 transition-all duration-300 border-l-4;
+}
+
+@utility civic-badge {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition-all duration-200;
+}
+
+@utility civic-input-group {
+  @apply relative rounded-xl transition-all duration-200 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2;
+}
+
+@utility civic-input-icon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground;
+}
+
+@utility civic-button-icon {
+  @apply inline-flex items-center justify-center rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+}
+
+@utility civic-button-lg {
+  @apply h-12 rounded-xl px-8 text-base font-medium;
+}
+
+@utility civic-button-xl {
+  @apply h-14 rounded-xl px-10 text-lg font-semibold;
+}
+
+@utility civic-section-title-gradient {
+  @apply text-4xl font-bold sm:text-5xl lg:text-6xl bg-gradient-to-r from-civic-primary to-civic-accent bg-clip-text text-transparent;
+}
+
+@utility civic-card-feature {
+  @apply bg-card rounded-2xl border shadow-md p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
 }

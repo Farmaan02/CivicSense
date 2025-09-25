@@ -11,14 +11,14 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: civicsense
+      MONGO_INITDB_DATABASE: civicpulse
 
   # Backend API server
   backend:
     environment:
       - NODE_ENV=development
       - PORT=3001
-      - MONGODB_URI=mongodb://admin:password123@mongo:27017/civicsense?authSource=admin
+      - MONGODB_URI=mongodb://admin:password123@mongo:27017/civicpulse?authSource=admin
       - JWT_SECRET=development-jwt-secret-change-in-production
       - GUEST_PASSWORD=guest123
     volumes:

@@ -8,7 +8,7 @@ interface SVGLogoProps {
   variant?: "full" | "icon" | "horizontal"
 }
 
-export function CivicSenseSVGLogo({ size = 32, className = "", variant = "full" }: SVGLogoProps) {
+export function CivicPulseSVGLogo({ size = 32, className = "", variant = "full" }: SVGLogoProps) {
   const IconSVG = () => (
     <svg
       width={size}
@@ -97,7 +97,7 @@ export function CivicSenseSVGLogo({ size = 32, className = "", variant = "full" 
           style={{ fontSize: size * 0.6 }}
           className="font-light text-blue-700 leading-none ml-1"
         >
-          Sense
+          Pulse
         </span>
       </div>
       <span 
@@ -131,7 +131,7 @@ export function CivicSenseSVGLogo({ size = 32, className = "", variant = "full" 
 }
 
 // Minimalist version for small spaces
-export function CivicSenseMinimal({ size = 24, className = "" }: { size?: number; className?: string }) {
+export function CivicPulseMinimal({ size = 24, className = "" }: { size?: number; className?: string }) {
   return (
     <svg
       width={size}

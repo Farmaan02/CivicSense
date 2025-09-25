@@ -45,7 +45,7 @@ export function Logo({ size = "md", variant = "full", className = "" }: LogoProp
 
   const LogoText = () => (
     <span className={`font-bold ${textSizeClasses[size]} bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent`}>
-      CivicSense
+      CivicPulse
     </span>
   )
 
@@ -101,7 +101,7 @@ export function LogoCreative({ size = "md", variant = "full", className = "" }: 
   const CreativeText = () => (
     <div className="flex flex-col leading-none">
       <span className={`font-bold ${textSizeClasses[size]} bg-gradient-to-r from-orange-600 via-blue-600 to-green-600 bg-clip-text text-transparent`}>
-        CivicSense
+        CivicPulse
       </span>
       {size !== "sm" && (
         <span className="text-xs text-gray-600 font-medium tracking-wide">

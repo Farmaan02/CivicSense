@@ -51,8 +51,13 @@
   "ongoing": "चल रहे",
   "resolved": "हल किए गए",
   "heatmap": "हीटमैप",
+  "community": {
+    "issuesResolved": "समस्याएं हल की गई",
+    "satisfaction": "सामुदायिक संतुष्टि",
+    "responseTime": "औसत प्रतिक्रिया समय"
+  },
   "landing": {
-    "title": "अपने समुदाय में समस्याओं की रिपोर्ट करें",
+    "title": "CivicPulse के साथ अपने समुदाय में समस्याओं की रिपोर्ट करें",
     "subtitle": "ध्यान देने वाली समस्याओं की रिपोर्ट करके अपने पड़ोस को बेहतर बनाने में मदद करें",
     "reportButton": "समस्या रिपोर्ट करें",
     "features": {
@@ -146,7 +151,7 @@
   },
   "admin": {
     "dashboard": {
-      "title": "एडमिन डैशबोर्ड",
+      "title": "CivicPulse एडमिन डैशबोर्ड",
       "stats": {
         "totalReports": "कुल रिपोर्ट",
         "newReports": "नई रिपोर्ट",

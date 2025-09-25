@@ -1,4 +1,4 @@
-// Authentication utility functions for CivicSense admin
+// Authentication utility functions for CivicPulse admin
 
 export const clearAuthState = () => {
   try {

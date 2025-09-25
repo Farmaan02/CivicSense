@@ -1,6 +1,6 @@
-# Running CivicSense Locally
+# Running CivicPulse Locally
 
-This guide explains how to run the CivicSense application locally for development and testing.
+This guide explains how to run the CivicPulse application locally for development and testing.
 
 ## Prerequisites
 
@@ -10,7 +10,7 @@ This guide explains how to run the CivicSense application locally for developmen
 
 ## OneDrive Warning
 
-⚠️ **Important**: The project should not be run from a OneDrive folder as this can cause `EINVAL readlink` errors on Windows. Move the project to a non-OneDrive path (e.g., `~/projects/civicsense`) before running.
+⚠️ **Important**: The project should not be run from a OneDrive folder as this can cause `EINVAL readlink` errors on Windows. Move the project to a non-OneDrive path (e.g., `~/projects/civicpulse`) before running.
 
 ## Setup Instructions
 
@@ -19,7 +19,7 @@ This guide explains how to run the CivicSense application locally for developmen
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd civicsense
+cd civicpulse
 
 # Install frontend dependencies
 npm ci
@@ -39,7 +39,7 @@ Create a `.env.local` file in the root directory with the following variables:
 JWT_SECRET=your-super-secret-jwt-key-here
 
 # MongoDB connection string (optional, will use in-memory database if not set)
-MONGODB_URI=mongodb://localhost:27017/civicsense
+MONGODB_URI=mongodb://localhost:27017/civicpulse
 
 # Google Gemini API key (optional, for AI features)
 GEMINI_KEY=your-gemini-api-key-here
@@ -60,7 +60,7 @@ mongod
 Or use Docker to run MongoDB:
 
 ```bash
-docker run -d -p 27017:27017 --name civicsense-mongo mongo:7.0
+docker run -d -p 27017:27017 --name civicpulse-mongo mongo:7.0
 ```
 
 ### 4. Run the Application
@@ -140,11 +140,11 @@ docker-compose down
 
 ```bash
 # Build the frontend image
-docker build -t civicsense-frontend .
+docker build -t civicpulse-frontend .
 
 # Build the backend image
 cd scripts
-docker build -t civicsense-backend -f ../Dockerfile.backend .
+docker build -t civicpulse-backend -f ../Dockerfile.backend .
 cd ..
 ```
 
@@ -194,7 +194,7 @@ This script will:
 ## Project Structure
 
 ```
-civicsense/
+civicpulse/
 ├── app/                 # Next.js pages and routing
 ├── components/          # React components
 ├── lib/                 # Utility functions and libraries

@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within CivicSense, please send an email to [security@civicsense.org](mailto:security@civicsense.org) instead of using the public issue tracker.
+If you discover a security vulnerability within CivicPulse, please send an email to [security@civicpulse.org](mailto:security@civicpulse.org) instead of using the public issue tracker.
 
 All security vulnerabilities will be promptly addressed.
 
@@ -57,7 +57,7 @@ The following environment variables are optional but recommended for production:
 JWT_SECRET=your-super-secret-jwt-key-here-minimum-32-characters
 
 # MongoDB connection string (required)
-MONGODB_URI=mongodb://localhost:27017/civicsense
+MONGODB_URI=mongodb://localhost:27017/civicpulse
 
 # Google Gemini API key (optional, for AI features)
 GEMINI_KEY=your-gemini-api-key-here

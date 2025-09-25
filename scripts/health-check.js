@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Health check script for CivicSense backend
+// Health check script for CivicPulse backend
 import dotenv from "dotenv"
 import path from "path"
 import fs from "fs"
@@ -10,7 +10,7 @@ import { MongoClient } from "mongodb"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-console.log('🔍 CivicSense Health Check')
+console.log('🔍 CivicPulse Health Check')
 console.log('========================')
 
 // Check Node.js version

@@ -1,5 +1,5 @@
 @echo off
-echo 🚀 Starting CivicSense Fullstack Application...
+echo 🚀 Starting CivicPulse Fullstack Application...
 
 REM Kill existing node processes
 taskkill /f /im node.exe >nul 2>&1
@@ -21,13 +21,13 @@ if not exist node_modules (
 )
 
 echo 🎯 Starting Backend Server...
-start "CivicSense Backend" cmd /k "cd /d C:\Users\farma\OneDrive\Desktop\civicSense\scripts && node backend-server.js"
+start "CivicPulse Backend" cmd /k "cd /d C:\Users\farma\OneDrive\Desktop\civicSense\scripts && node backend-server.js"
 
 REM Wait for backend to start
 timeout /t 3 >nul
 
 echo 🎨 Starting Frontend Server...
-start "CivicSense Frontend" cmd /k "cd /d C:\Users\farma\OneDrive\Desktop\civicSense && npm run dev"
+start "CivicPulse Frontend" cmd /k "cd /d C:\Users\farma\OneDrive\Desktop\civicSense && npm run dev"
 
 echo ✅ Both servers are starting!
 echo 📱 Frontend will be available at: http://localhost:3000

@@ -1,8 +1,8 @@
-# Full End-to-End Fix and Hardening Pass for CivicSense
+# Full End-to-End Fix and Hardening Pass for CivicPulse
 
 ## Summary
 
-This PR implements a comprehensive fix and hardening pass for the CivicSense application to ensure stability, predictability, and deployability with zero runtime errors.
+This PR implements a comprehensive fix and hardening pass for the CivicPulse application to ensure stability, predictability, and deployability with zero runtime errors.
 
 ## Changes Included
 
@@ -47,7 +47,7 @@ This PR implements a comprehensive fix and hardening pass for the CivicSense app
 - ✅ All tests pass in CI environment
 
 ### Docker Deployment
-- ✅ `docker build -t civicsense:latest .` succeeds
+- ✅ `docker build -t civicpulse:latest .` succeeds
 - ✅ `docker-compose up` boots app and mongo
 - ✅ API can connect to database in Docker environment
 

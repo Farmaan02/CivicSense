@@ -1,5 +1,5 @@
 {
-  "name": "civicsense",
+  "name": "civicpulse",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -60,6 +60,7 @@
     "dotenv": "^17.2.2",
     "embla-carousel-react": "8.5.1",
     "events": "^3.3.0",
+    "framer-motion": "^12.23.22",
     "geist": "^1.5.1",
     "input-otp": "1.4.1",
     "leaflet": "^1.9.4",

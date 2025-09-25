@@ -12,7 +12,11 @@ import {
   Thermometer,
   Menu,
   User,
-  LogOut
+  LogOut,
+  Settings,
+  BarChart3,
+  Bell,
+  Palette
 } from "lucide-react"
 import {
   Sidebar,
@@ -20,6 +24,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -32,14 +37,20 @@ import { Button } from "@/components/ui/button"
 export function AdminSidebar() {
   const pathname = usePathname()
   const { admin, logout } = useAdminAuth()
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile, setOpen } = useSidebar()
 
-  const navItems = [
-    { href: "/admin", label: "Feed", icon: Home },
-    { href: "/admin/reports/ongoing", label: "Ongoing", icon: Flame },
+  const mainNavItems = [
+    { href: "/admin", label: "Dashboard", icon: Home },
+    { href: "/admin/reports/ongoing", label: "Ongoing Reports", icon: Flame },
     { href: "/admin/teams", label: "Teams", icon: Users },
-    { href: "/admin/reports/resolved", label: "Resolved", icon: CheckCircle },
+    { href: "/admin/reports/resolved", label: "Resolved Reports", icon: CheckCircle },
     { href: "/admin/heatmap", label: "Heatmap", icon: Thermometer },
+  ]
+
+  const adminNavItems = [
+    { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/admin/settings", label: "Settings", icon: Settings },
+    { href: "/admin/notifications", label: "Notifications", icon: Bell },
   ]
 
   const isActive = (href: string) => {
@@ -62,27 +73,68 @@ export function AdminSidebar() {
     }
   }
 
+  const toggleSidebar = () => {
+    setOpen(false)
+  }
+
   return (
     <Sidebar className="bg-[#A3B18A] border-r border-[#8f9c7d]">
       <SidebarHeader className="border-b border-[#8f9c7d]">
         <div className="flex items-center gap-2">
-          <Menu className="h-6 w-6" />
-          <h2 className="text-xl font-bold">CivicSense Admin</h2>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="h-8 w-8 p-0 rounded-full hover:bg-[#8f9c7d]"
+            onClick={toggleSidebar}
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
+          <h2 className="text-lg font-bold">Admin Panel</h2>
         </div>
       </SidebarHeader>
       
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel className="text-white/70">Main Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => {
+              {mainNavItems.map((item) => {
                 const Icon = item.icon
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton 
                       asChild 
                       isActive={isActive(item.href)}
-                      className={`hover:bg-[#8f9c7d] hover:text-gray-900 ${
+                      className={`hover:bg-[#8f9c7d] hover:text-gray-900 transition-all duration-200 rounded-xl ${
+                        isActive(item.href)
+                          ? "bg-[#8f9c7d] text-gray-900 font-semibold"
+                          : "text-gray-800"
+                      }`}
+                    >
+                      <Link href={item.href} onClick={() => handleNavigation(item.href)}>
+                        <Icon className="h-5 w-5" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-white/70">Admin Tools</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {adminNavItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton 
+                      asChild 
+                      isActive={isActive(item.href)}
+                      className={`hover:bg-[#8f9c7d] hover:text-gray-900 transition-all duration-200 rounded-xl ${
                         isActive(item.href)
                           ? "bg-[#8f9c7d] text-gray-900 font-semibold"
                           : "text-gray-800"
@@ -103,19 +155,21 @@ export function AdminSidebar() {
       
       <SidebarFooter className="border-t border-[#8f9c7d] mt-auto">
         {admin ? (
-          <div className="text-sm font-medium p-2">
+          <div className="text-sm font-medium p-2 space-y-3">
             <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
+              <div className="h-8 w-8 rounded-full bg-[#8f9c7d] flex items-center justify-center">
+                <User className="h-4 w-4 text-gray-800" />
+              </div>
               <div>
-                <p>Admin: {admin.profile?.firstName || admin.username}</p>
+                <p className="font-medium text-gray-900">{admin.profile?.firstName || admin.username}</p>
                 <p className="text-xs text-gray-700 mt-1">
-                  Dept: {admin.profile?.position || "Municipal Staff"}
+                  {admin.profile?.position || "Municipal Staff"}
                 </p>
               </div>
             </div>
             <Button 
               variant="ghost" 
-              className="w-full justify-start gap-2 mt-2 text-gray-800 hover:bg-[#8f9c7d] hover:text-gray-900"
+              className="w-full justify-start gap-2 text-gray-800 hover:bg-[#8f9c7d] hover:text-gray-900 rounded-xl"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4" />

@@ -1,6 +1,6 @@
-// API client utilities for CivicSense platform
+// API client utilities for CivicPulse platform
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3006"
 
 // Debug logging for environment variables
 if (typeof window !== 'undefined') {
@@ -542,14 +542,17 @@ export class ApiClient {
       })
 
       const result = await response.json()
+      
+      console.log('[API] Admin login response:', response.status, result)
 
       if (!response.ok) {
         const error = result as ApiError
-        throw new Error(error.details || error.error || "Login failed")
+        throw new Error(error.details || error.error || `Login failed with status ${response.status}`)
       }
 
       return result as AdminLoginResponse
     } catch (error) {
+      console.error('[API] Admin login error:', error)
       if (error instanceof TypeError && error.message.includes("fetch")) {
         throw new Error("Unable to connect to server. Please check your internet connection.")
       }
@@ -568,14 +571,17 @@ export class ApiClient {
       })
 
       const result = await response.json()
+      
+      console.log('[API] Guest login response:', response.status, result)
 
       if (!response.ok) {
         const error = result as ApiError
-        throw new Error(error.details || error.error || "Guest login failed")
+        throw new Error(error.details || error.error || `Guest login failed with status ${response.status}`)
       }
 
       return result as AdminGuestResponse
     } catch (error) {
+      console.error('[API] Guest login error:', error)
       if (error instanceof TypeError && error.message.includes("fetch")) {
         throw new Error("Unable to connect to server. Please check your internet connection.")
       }

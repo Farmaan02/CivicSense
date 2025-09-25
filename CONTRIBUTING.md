@@ -1,6 +1,6 @@
-# Contributing to CivicSense
+# Contributing to CivicPulse
 
-Thank you for your interest in contributing to CivicSense! This document provides guidelines and information to help you contribute effectively to the project.
+Thank you for your interest in contributing to CivicPulse! This document provides guidelines and information to help you contribute effectively to the project.
 
 ## Table of Contents
 
@@ -32,11 +32,11 @@ This project adheres to a Code of Conduct that we expect all contributors to fol
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/civicsense.git
+   git clone https://github.com/YOUR_USERNAME/civicpulse.git
    ```
 3. Install dependencies:
    ```bash
-   cd civicsense
+   cd civicpulse
    npm install
    cd scripts
    npm install
@@ -72,7 +72,7 @@ docker-compose up --build
 ## Project Structure
 
 ```
-civicsense/
+civicpulse/
 ├── app/                 # Next.js frontend pages and layouts
 ├── components/          # React UI components
 ├── hooks/               # Custom React hooks

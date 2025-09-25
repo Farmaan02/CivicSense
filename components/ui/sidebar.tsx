@@ -19,7 +19,6 @@ const SidebarContext = React.createContext<{
   open: boolean
   setOpen: (open: boolean) => void
   state: "expanded" | "collapsed"
-  toggleSidebar: () => void
 }>({
   isMobile: false,
   openMobile: false,
@@ -27,7 +26,6 @@ const SidebarContext = React.createContext<{
   open: true,
   setOpen: () => {},
   state: "expanded",
-  toggleSidebar: () => {},
 })
 
 interface SidebarProviderProps {
@@ -60,10 +58,6 @@ const SidebarProvider = ({
     }
   }, [isMobile, setOpenProp, open])
 
-  const toggleSidebar = React.useCallback(() => {
-    setOpen((open) => !open)
-  }, [setOpen])
-
   const state = open ? ("expanded" as const) : ("collapsed" as const)
 
   const contextValue = React.useMemo(
@@ -74,9 +68,8 @@ const SidebarProvider = ({
       open,
       setOpen,
       state,
-      toggleSidebar,
     }),
-    [isMobile, openMobile, open, state, toggleSidebar]
+    [isMobile, openMobile, open, state]
   )
 
   return (
@@ -98,7 +91,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ className, children, side = "left", ...props }, ref) => {
-    const { isMobile, openMobile, setOpenMobile, state } = useSidebar()
+    const { isMobile, openMobile, setOpenMobile } = useSidebar()
 
     if (isMobile) {
       return (
@@ -109,7 +102,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
               className="w-64 p-0"
             >
               <div className="flex items-center justify-between border-b p-4">
-                <h2 className="text-lg font-semibold">CivicSense</h2>
+                <h2 className="text-lg font-semibold">CivicPulse</h2>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -138,7 +131,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       >
         <div className="flex h-full flex-col">
           <div className="border-b p-4">
-            <h2 className="text-xl font-bold">CivicSense</h2>
+            <h2 className="text-xl font-bold">CivicPulse</h2>
           </div>
           <ScrollArea className="flex-1 py-4">
             <div className="px-2">{children}</div>

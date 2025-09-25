@@ -4,32 +4,32 @@ services:
   # MongoDB database
   mongo:
     image: mongo:7.0
-    container_name: civicsense-mongo
+    container_name: civicpulse-mongo
     restart: unless-stopped
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: civicsense
+      MONGO_INITDB_DATABASE: civicpulse
     volumes:
       - mongo_data:/data/db
     networks:
-      - civicsense-network
+      - civicpulse-network
 
   # Backend API server
   backend:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    container_name: civicsense-backend
+    container_name: civicpulse-backend
     restart: unless-stopped
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - MONGODB_URI=mongodb://admin:password123@mongo:27017/civicsense?authSource=admin
+      - MONGODB_URI=mongodb://admin:password123@mongo:27017/civicpulse?authSource=admin
       - JWT_SECRET=your-jwt-secret-here-change-in-production
       - GUEST_PASSWORD=guest123
     volumes:
@@ -37,14 +37,14 @@ services:
     depends_on:
       - mongo
     networks:
-      - civicsense-network
+      - civicpulse-network
 
   # Frontend Next.js application
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: civicsense-frontend
+    container_name: civicpulse-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -54,12 +54,12 @@ services:
     depends_on:
       - backend
     networks:
-      - civicsense-network
+      - civicpulse-network
 
 volumes:
   mongo_data:
     driver: local
 
 networks:
-  civicsense-network:
+  civicpulse-network:
     driver: bridge

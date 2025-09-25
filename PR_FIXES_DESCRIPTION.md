@@ -1,8 +1,8 @@
-# Full End-to-End Fix and Hardening Pass for CivicSense
+# Full End-to-End Fix and Hardening Pass for CivicPulse
 
 ## Summary
 
-This PR implements a comprehensive fix and hardening pass for the CivicSense Next.js application to ensure stability, predictability, and deployability with zero runtime errors. All changes are internal fixes and improvements without any breaking feature changes.
+This PR implements a comprehensive fix and hardening pass for the CivicPulse Next.js application to ensure stability, predictability, and deployability with zero runtime errors. All changes are internal fixes and improvements without any breaking feature changes.
 
 ## Key Fixes and Improvements
 
@@ -115,14 +115,14 @@ This PR implements a comprehensive fix and hardening pass for the CivicSense Nex
 4. All tests pass in CI environment
 
 ### Docker Deployment
-1. `docker build -t civicsense:latest .` - Docker build succeeds
+1. `docker build -t civicpulse:latest .` - Docker build succeeds
 2. `docker-compose up` - App and MongoDB boot correctly
 3. API can connect to database in Docker environment
 
 ## Known Issues & Recommendations
 
 ### OneDrive Path Issues
-The project should not be run from a OneDrive folder as it may cause `EINVAL readlink` errors on Windows. Move the project to a non-OneDrive path (e.g., `~/projects/civicsense`) before running.
+The project should not be run from a OneDrive folder as it may cause `EINVAL readlink` errors on Windows. Move the project to a non-OneDrive path (e.g., `~/projects/civicpulse`) before running.
 
 ### Node.js Version
 Ensure you're using Node.js 20.x LTS as specified in `.nvmrc`. Using other versions may cause compatibility issues.

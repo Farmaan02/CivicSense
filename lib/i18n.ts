@@ -53,7 +53,7 @@ export const useTranslation = () => {
       
       // Load saved language preference (only on client side)
       if (typeof window !== "undefined") {
-        const savedLang = localStorage.getItem("civicsense-language") as Language
+        const savedLang = localStorage.getItem("civicpulse-language") as Language
         if (savedLang && (savedLang === "en" || savedLang === "hi")) {
           setLanguage(savedLang)
         }
@@ -67,7 +67,7 @@ export const useTranslation = () => {
   const changeLanguage = (lang: Language) => {
     setLanguage(lang)
     if (typeof window !== "undefined") {
-      localStorage.setItem("civicsense-language", lang)
+      localStorage.setItem("civicpulse-language", lang)
       // Update document language attribute
       document.documentElement.lang = lang
     }

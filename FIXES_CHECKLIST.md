@@ -1,4 +1,4 @@
-# CivicSense Full Fix and Hardening Checklist
+# CivicPulse Full Fix and Hardening Checklist
 
 ## Environment & Reproducibility ✅
 

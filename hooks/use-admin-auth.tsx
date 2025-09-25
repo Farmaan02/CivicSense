@@ -117,7 +117,9 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
       setAdmin(response.admin)
       setIsAuthenticated(true)
     } catch (error: any) {
-      setError(error.message || "Login failed")
+      console.error('Admin login error:', error)
+      const errorMessage = error.message || "Login failed"
+      setError(errorMessage)
       throw error
     } finally {
       setLoading(false)
@@ -136,7 +138,9 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
       setAdmin(response.admin)
       setIsAuthenticated(true)
     } catch (error: any) {
-      setError(error.message || "Guest login failed")
+      console.error('Guest login error:', error)
+      const errorMessage = error.message || "Guest login failed"
+      setError(errorMessage)
       throw error
     } finally {
       setLoading(false)

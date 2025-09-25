@@ -13,9 +13,10 @@ export function ReportButton() {
     <>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className="bg-civic-primary hover:bg-civic-accent text-white px-12 py-6 text-xl font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+        className="civic-button bg-gradient-to-r from-civic-primary to-civic-accent hover:from-civic-accent hover:to-civic-primary text-white px-8 py-6 text-xl font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group"
       >
-        {t("landing.reportButton")}
+        <span className="relative z-10">{t("landing.reportButton")}</span>
+        <span className="absolute inset-0 bg-white/20 rounded-xl transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
       </Button>
 
       <ReportModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

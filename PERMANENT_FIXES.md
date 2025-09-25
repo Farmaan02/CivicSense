@@ -1,6 +1,6 @@
-# Permanent Fixes for CivicSense Admin Panel
+# Permanent Fixes for CivicPulse Admin Panel
 
-This document outlines the permanent fixes implemented to prevent recurring issues in the CivicSense admin panel.
+This document outlines the permanent fixes implemented to prevent recurring issues in the CivicPulse admin panel.
 
 ## 1. Environment Variable Management
 

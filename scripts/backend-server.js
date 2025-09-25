@@ -35,7 +35,7 @@ let envLoaded = false
 for (const envPath of envPaths) {
   if (fs.existsSync(envPath)) {
     dotenv.config({ path: envPath })
-    console.log(`[CivicSense] Loaded environment variables from: ${envPath}`)
+    console.log(`[CivicPulse] Loaded environment variables from: ${envPath}`)
     envLoaded = true
     break
   }
@@ -44,7 +44,7 @@ for (const envPath of envPaths) {
 // If no .env file found, try default loading
 if (!envLoaded) {
   dotenv.config()
-  console.log('[CivicSense] Using default environment variable loading')
+  console.log('[CivicPulse] Using default environment variable loading')
 }
 
 // Validate critical environment variables
@@ -52,8 +52,8 @@ const requiredEnvVars = ['JWT_SECRET']
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar])
 
 if (missingEnvVars.length > 0) {
-  console.warn(`[CivicSense] WARNING: Missing required environment variables: ${missingEnvVars.join(', ')}`)
-  console.log('[CivicSense] Using default values for missing variables')
+  console.warn(`[CivicPulse] WARNING: Missing required environment variables: ${missingEnvVars.join(', ')}`)
+  console.log('[CivicPulse] Using default values for missing variables')
 }
 
 const app = express()
@@ -100,20 +100,20 @@ const upload = multer({
 })
 
 // MongoDB connection setup
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/civicsense"
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/civicpulse"
 let useDatabase = false
 let reports = []
 
 async function connectToDatabase() {
-  console.log(`[CivicSense] MongoDB URI found: ${MONGODB_URI ? 'Yes' : 'No'}`)
+  console.log(`[CivicPulse] MongoDB URI found: ${MONGODB_URI ? 'Yes' : 'No'}`)
   if (MONGODB_URI) {
-    console.log(`[CivicSense] Attempting connection to: ${MONGODB_URI.replace(/:\/\/[^:]*:[^@]*@/, '://***:***@')}`)
-    console.log(`[CivicSense] Node.js version: ${process.version}`)
+    console.log(`[CivicPulse] Attempting connection to: ${MONGODB_URI.replace(/:\/\/[^:]*:[^@]*@/, '://***:***@')}`)
+    console.log(`[CivicPulse] Node.js version: ${process.version}`)
     
     // Check Node.js version compatibility
     if (!process.version.startsWith('v20.')) {
-      console.warn('[CivicSense] Warning: This project is designed for Node.js v20.x for optimal MongoDB compatibility')
-      console.warn('[CivicSense] Current version may cause SSL/TLS connection issues with MongoDB Atlas')
+      console.warn('[CivicPulse] Warning: This project is designed for Node.js v20.x for optimal MongoDB compatibility')
+      console.warn('[CivicPulse] Current version may cause SSL/TLS connection issues with MongoDB Atlas')
     }
   }
   
@@ -125,30 +125,30 @@ async function connectToDatabase() {
       tls: true,
       tlsInsecure: false,
     })
-    console.log(`[CivicSense] Connected to MongoDB successfully`)
-    console.log(`[CivicSense] Database: ${mongoose.connection.db.databaseName}`)
+    console.log(`[CivicPulse] Connected to MongoDB successfully`)
+    console.log(`[CivicPulse] Database: ${mongoose.connection.db.databaseName}`)
     
     // Seed database if empty
     await seedMongoDatabase(mongoose, Report)
     useDatabase = true
-    console.log("[CivicSense] Database mode: MongoDB enabled")
+    console.log("[CivicPulse] Database mode: MongoDB enabled")
   } catch (error) {
-    console.error(`[CivicSense] MongoDB connection error:`, error.message)
+    console.error(`[CivicPulse] MongoDB connection error:`, error.message)
     
     // Provide specific guidance based on error type
     if (error.message.includes('tlsv1 alert internal error')) {
-      console.error('[CivicSense] SSL/TLS compatibility issue detected.')
-      console.error('[CivicSense] This is commonly caused by Node.js version incompatibility.')
-      console.error('[CivicSense] Please use Node.js v20.x for MongoDB Atlas compatibility.')
-      console.error('[CivicSense] Current Node.js version:', process.version)
+      console.error('[CivicPulse] SSL/TLS compatibility issue detected.')
+      console.error('[CivicPulse] This is commonly caused by Node.js version incompatibility.')
+      console.error('[CivicPulse] Please use Node.js v20.x for MongoDB Atlas compatibility.')
+      console.error('[CivicPulse] Current Node.js version:', process.version)
     } else if (error.message.includes('AuthenticationFailed')) {
-      console.error('[CivicSense] Authentication failed. Please check your MongoDB credentials.')
-      console.error('[CivicSense] Ensure your MONGODB_URI in .env.local has correct username/password.')
+      console.error('[CivicPulse] Authentication failed. Please check your MongoDB credentials.')
+      console.error('[CivicPulse] Ensure your MONGODB_URI in .env.local has correct username/password.')
     } else if (error.message.includes('ENOTFOUND')) {
-      console.error('[CivicSense] DNS resolution failed. Check your MongoDB URI and network connectivity.')
+      console.error('[CivicPulse] DNS resolution failed. Check your MongoDB URI and network connectivity.')
     }
     
-    console.log("[CivicSense] Falling back to in-memory mode")
+    console.log("[CivicPulse] Falling back to in-memory mode")
     reports = seedInMemoryDatabase()
     useDatabase = false
     global.reports = reports
@@ -156,7 +156,7 @@ async function connectToDatabase() {
 }
 
 // Initialize database connection
-console.log('[CivicSense] Attempting database connection...')
+console.log('[CivicPulse] Attempting database connection...')
 connectToDatabase()
 
 let reportIdCounter = 1
@@ -379,7 +379,7 @@ app.post("/reports", upload.single("media"), async (req, res) => {
       // Save to MongoDB
       const report = new Report(reportData)
       savedReport = await report.save()
-      console.log(`[CivicSense] New report saved to database: ${trackingId}`)
+      console.log(`[CivicPulse] New report saved to database: ${trackingId}`)
     } else {
       // Store in-memory
       const report = {
@@ -390,7 +390,7 @@ app.post("/reports", upload.single("media"), async (req, res) => {
       }
       reports.push(report)
       savedReport = report
-      console.log(`[CivicSense] New report created in-memory: ${trackingId}`)
+      console.log(`[CivicPulse] New report created in-memory: ${trackingId}`)
     }
 
     // Send in-app notification
@@ -619,7 +619,7 @@ app.patch("/reports/:id/assign", authenticateAdmin, requirePermission("assign-re
       report = reports[reportIndex]
     }
 
-    console.log(`[CivicSense] Report ${id} assigned to team ${teamId} by ${req.admin.username}`)
+    console.log(`[CivicPulse] Report ${id} assigned to team ${teamId} by ${req.admin.username}`)
 
     res.json({
       message: "Report assigned successfully",
@@ -713,7 +713,7 @@ app.patch("/reports/:id/status", authenticateAdmin, requirePermission("update-st
       })
     }
 
-    console.log(`[CivicSense] Report ${id} status updated to ${status} by ${req.admin.username}`)
+    console.log(`[CivicPulse] Report ${id} status updated to ${status} by ${req.admin.username}`)
 
     // Send in-app notification
     notificationService.sendInAppNotification("report.status_changed", {
@@ -939,38 +939,38 @@ app.use((req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`[CivicSense] Backend Server running on port ${PORT}`)
-  console.log(`[CivicSense] Health check: http://localhost:${PORT}/health`)
-  console.log(`[CivicSense] Loaded ${reports.length} seed reports`)
-  console.log(`[CivicSense] API endpoints:`)
-  console.log(`[CivicSense]   POST /media/upload - Upload media files`)
-  console.log(`[CivicSense]   POST /reports - Create new report`)
-  console.log(`[CivicSense]   GET /reports - Get all reports`)
-  console.log(`[CivicSense]   GET /reports/:trackingId - Get specific report`)
-  console.log(`[CivicSense]   POST /auth/login - Admin login`)
-  console.log(`[CivicSense]   POST /auth/guest - Guest admin token`)
-  console.log(`[CivicSense]   GET /auth/verify - Verify admin token`)
-  console.log(`[CivicSense]   GET /teams - Get all teams`)
-  console.log(`[CivicSense]   POST /teams - Create new team`)
-  console.log(`[CivicSense]   PATCH /teams/:id/assign - Assign reports to team`)
-  console.log(`[CivicSense]   GET /admin/reports - Get all reports (admin view)`)
-  console.log(`[CivicSense]   PATCH /reports/:id/assign - Assign report to team`)
-  console.log(`[CivicSense]   PATCH /reports/:id/status - Update report status`)
-  console.log(`[CivicSense]   POST /ai/analyze-image - AI image analysis`)
-  console.log(`[CivicSense]   POST /ai/generate-description - AI description generation`)
-  console.log(`[CivicSense]   POST /ai/transcribe - AI audio transcription`)
-  console.log(`[CivicSense]   GET /ai/status - AI service status`)
-  console.log(`[CivicSense]   POST /webhooks/whatsapp - WhatsApp webhook`)
-  console.log(`[CivicSense]   GET /webhooks/whatsapp - WhatsApp webhook verification`)
-  console.log(`[CivicSense]   GET /notifications/status - Notification queue status`)
+  console.log(`[CivicPulse] Backend Server running on port ${PORT}`)
+  console.log(`[CivicPulse] Health check: http://localhost:${PORT}/health`)
+  console.log(`[CivicPulse] Loaded ${reports.length} seed reports`)
+  console.log(`[CivicPulse] API endpoints:`)
+  console.log(`[CivicPulse]   POST /media/upload - Upload media files`)
+  console.log(`[CivicPulse]   POST /reports - Create new report`)
+  console.log(`[CivicPulse]   GET /reports - Get all reports`)
+  console.log(`[CivicPulse]   GET /reports/:trackingId - Get specific report`)
+  console.log(`[CivicPulse]   POST /auth/login - Admin login`)
+  console.log(`[CivicPulse]   POST /auth/guest - Guest admin token`)
+  console.log(`[CivicPulse]   GET /auth/verify - Verify admin token`)
+  console.log(`[CivicPulse]   GET /teams - Get all teams`)
+  console.log(`[CivicPulse]   POST /teams - Create new team`)
+  console.log(`[CivicPulse]   PATCH /teams/:id/assign - Assign reports to team`)
+  console.log(`[CivicPulse]   GET /admin/reports - Get all reports (admin view)`)
+  console.log(`[CivicPulse]   PATCH /reports/:id/assign - Assign report to team`)
+  console.log(`[CivicPulse]   PATCH /reports/:id/status - Update report status`)
+  console.log(`[CivicPulse]   POST /ai/analyze-image - AI image analysis`)
+  console.log(`[CivicPulse]   POST /ai/generate-description - AI description generation`)
+  console.log(`[CivicPulse]   POST /ai/transcribe - AI audio transcription`)
+  console.log(`[CivicPulse]   GET /ai/status - AI service status`)
+  console.log(`[CivicPulse]   POST /webhooks/whatsapp - WhatsApp webhook`)
+  console.log(`[CivicPulse]   GET /webhooks/whatsapp - WhatsApp webhook verification`)
+  console.log(`[CivicPulse]   GET /notifications/status - Notification queue status`)
   console.log(
-    `[CivicSense] AI Service: ${process.env.GEMINI_KEY ? "Gemini configured" : "Mock mode (set GEMINI_KEY for real AI)"}`,
+    `[CivicPulse] AI Service: ${process.env.GEMINI_KEY ? "Gemini configured" : "Mock mode (set GEMINI_KEY for real AI)"}`,
   )
   console.log(
-    `[CivicSense] WhatsApp API: ${process.env.WHATSAPP_API ? "Configured" : "TODO: Set WHATSAPP_API environment variable"}`,
+    `[CivicPulse] WhatsApp API: ${process.env.WHATSAPP_API ? "Configured" : "TODO: Set WHATSAPP_API environment variable"}`,
   )
-  console.log(`[CivicSense] Admin Credentials:`)
-  console.log(`[CivicSense]   Username: admin, Password: admin123`)
-  console.log(`[CivicSense]   Username: moderator, Password: mod123`)
-  console.log(`[CivicSense]   Guest Password: guest123`)
+  console.log(`[CivicPulse] Admin Credentials:`)
+  console.log(`[CivicPulse]   Username: admin, Password: admin123`)
+  console.log(`[CivicPulse]   Username: moderator, Password: mod123`)
+  console.log(`[CivicPulse]   Guest Password: guest123`)
 })

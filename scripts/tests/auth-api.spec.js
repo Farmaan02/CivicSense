@@ -6,7 +6,7 @@ global.admins = [
   {
     id: "1",
     username: "admin",
-    email: "admin@civicsense.local",
+    email: "admin@civicpulse.local",
     password: "$2a$10$y44LPR5LnfUkDaeIGoJ.4emvflpoYDPEUL6HG7hvB3fUtZozRw/w6", // 'admin123' hashed
     role: "super-admin",
     permissions: [
@@ -47,7 +47,7 @@ describe("Auth API Integration", () => {
       expect(response.body).toHaveProperty("admin")
       expect(response.body.admin).toHaveProperty("id", "1")
       expect(response.body.admin).toHaveProperty("username", "admin")
-      expect(response.body.admin).toHaveProperty("email", "admin@civicsense.local")
+      expect(response.body.admin).toHaveProperty("email", "admin@civicpulse.local")
       expect(response.body.admin).toHaveProperty("role", "super-admin")
     })
 

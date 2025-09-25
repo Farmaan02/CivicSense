@@ -51,8 +51,13 @@
   "ongoing": "Ongoing",
   "resolved": "Resolved",
   "heatmap": "Heatmap",
+  "community": {
+    "issuesResolved": "Issues Resolved",
+    "satisfaction": "Community Satisfaction",
+    "responseTime": "Avg. Response Time"
+  },
   "landing": {
-    "title": "Report Issues in Your Community",
+    "title": "Report Issues in Your Community with CivicPulse",
     "subtitle": "Help make your neighborhood better by reporting problems that need attention",
     "reportButton": "Report an Issue",
     "features": {
@@ -146,7 +151,7 @@
   },
   "admin": {
     "dashboard": {
-      "title": "Admin Dashboard",
+      "title": "CivicPulse Admin Dashboard",
       "stats": {
         "totalReports": "Total Reports",
         "newReports": "New Reports",

@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "CivicSense API",
-    "description": "Complete API collection for CivicSense platform - community issue reporting system with internationalization support",
+    "name": "CivicPulse API",
+    "description": "Complete API collection for CivicPulse platform - community issue reporting system with internationalization support",
     "version": "1.1.0",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

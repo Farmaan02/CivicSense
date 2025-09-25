@@ -14,9 +14,9 @@ import { UserSidebar } from "@/components/navigation/user-sidebar"
 import { Header } from "@/components/layout/header"
 
 export const metadata: Metadata = {
-  title: "CivicSense - Report Community Issues",
+  title: "CivicPulse - Report Community Issues",
   description: "Help make your neighborhood better by reporting problems that need attention",
-  generator: "CivicSense",
+  generator: "CivicPulse",
 }
 
 export default function RootLayout({
@@ -24,22 +24,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const hasValidGoogleMapsKey = 
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && 
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY !== 'PLACEHOLDER_API_KEY' &&
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY !== 'YOUR_API_KEY_HERE'
+
   return (
     <html lang="en">
-      <head>
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+        {/* Skip to main content link for accessibility */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+        
         {/* Google Maps JavaScript API - Only load if API key is available */}
-        {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && 
-         process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY !== 'PLACEHOLDER_API_KEY' && (
+        {hasValidGoogleMapsKey && (
           <Script
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places,visualization`}
             strategy="beforeInteractive"
-            onError={(e) => {
-              console.warn('Google Maps API failed to load:', e)
-            }}
           />
         )}
-      </head>
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <AuthProvider>
           <NotificationProvider>
             <SidebarProvider defaultOpen={true}>
@@ -47,7 +51,9 @@ export default function RootLayout({
               <SidebarInset>
                 <Header />
                 <Suspense fallback={null}>
-                  {children}
+                  <main id="main-content" className="flex-1">
+                    {children}
+                  </main>
                   <Toaster />
                 </Suspense>
               </SidebarInset>

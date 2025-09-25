@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for CivicSense
+# Multi-stage Dockerfile for CivicPulse
 FROM node:20-alpine AS base
 
 # Install dependencies only when needed

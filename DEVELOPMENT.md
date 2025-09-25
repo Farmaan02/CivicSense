@@ -1,6 +1,6 @@
 # Development Guide
 
-This document provides detailed information about developing and contributing to the CivicSense platform.
+This document provides detailed information about developing and contributing to the CivicPulse platform.
 
 ## Table of Contents
 
@@ -19,7 +19,7 @@ This document provides detailed information about developing and contributing to
 
 ## Project Overview
 
-CivicSense is a comprehensive civic issue reporting platform built with modern web technologies. It allows community members to report problems in their neighborhood, view them on an interactive map, and track their resolution.
+CivicPulse is a comprehensive civic issue reporting platform built with modern web technologies. It allows community members to report problems in their neighborhood, view them on an interactive map, and track their resolution.
 
 ### Key Features
 

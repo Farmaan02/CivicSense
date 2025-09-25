@@ -1,6 +1,6 @@
 # GitHub Preparation Summary
 
-This document summarizes the steps taken to prepare the CivicSense project for GitHub.
+This document summarizes the steps taken to prepare the CivicPulse project for GitHub.
 
 ## Files Created for GitHub Repository
 
@@ -35,7 +35,7 @@ To push this repository to GitHub:
 1. Create a new repository on GitHub (do not initialize with README)
 2. Run the following commands:
    ```bash
-   git remote add origin https://github.com/your-username/civicsense.git
+   git remote add origin https://github.com/your-username/civicpulse.git
    git branch -M main
    git push -u origin main
    ```

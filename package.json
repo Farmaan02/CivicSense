@@ -17,8 +17,7 @@
     "test": "cd scripts && npm test",
     "test:watch": "cd scripts && npm run test:watch",
     "test:coverage": "cd scripts && npm run test:coverage",
-    "test:frontend": "jest",
-    "prepare": "husky"
+  "test:frontend": "jest"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

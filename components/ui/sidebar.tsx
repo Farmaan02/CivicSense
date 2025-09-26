@@ -588,7 +588,7 @@ interface SidebarRailProps extends React.HTMLAttributes<HTMLButtonElement> {
 
 const SidebarRail = React.forwardRef<HTMLButtonElement, SidebarRailProps>(
   ({ className, children, ...props }, ref) => {
-    const { toggleSidebar } = useSidebar()
+    const { open, setOpen } = useSidebar()
 
     return (
       <button
@@ -596,7 +596,7 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, SidebarRailProps>(
         data-sidebar="rail"
         aria-label="Toggle Sidebar"
         tabIndex={-1}
-        onClick={toggleSidebar}
+        onClick={() => setOpen(!open)}
         title="Toggle Sidebar"
         className={cn(
           "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
@@ -623,7 +623,7 @@ interface SidebarTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 
 const SidebarTrigger = React.forwardRef<HTMLButtonElement, SidebarTriggerProps>(
   ({ className, children, ...props }, ref) => {
-    const { toggleSidebar } = useSidebar()
+    const { open, setOpen } = useSidebar()
 
     return (
       <Button
@@ -632,7 +632,7 @@ const SidebarTrigger = React.forwardRef<HTMLButtonElement, SidebarTriggerProps>(
         variant="ghost"
         size="icon"
         className={cn("h-7 w-7", className)}
-        onClick={toggleSidebar}
+        onClick={() => setOpen(!open)}
         {...props}
       >
         {children ?? <Menu />}

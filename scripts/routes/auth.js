@@ -6,8 +6,14 @@ import { updateGuestToken } from "../middleware/adminAuth.js"
 
 const router = express.Router()
 
-// Use global admin storage to sync with adminAuth middleware
-const admins = global.admins
+// Helper function to get admins from global storage
+function getAdmins() {
+  // Ensure global.admins exists
+  if (!global.admins) {
+    global.admins = []
+  }
+  return global.admins
+}
 
 // JWT secret (use environment variable in production)
 // Enhanced secret management with validation
@@ -48,6 +54,9 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Username and password are required" })
     }
 
+    // Get admins from global storage
+    const admins = getAdmins()
+    
     // Find admin by username or email
     const admin = admins.find((a) => (a.username === username || a.email === username) && a.isActive)
 
@@ -106,6 +115,9 @@ router.post("/guest", (req, res) => {
     // Update the shared global admin storage
     updateGuestToken(token, expiresAt)
 
+    // Get admins from global storage
+    const admins = getAdmins()
+    
     // Create guest admin for response
     const guestAdmin = {
       id: "guest",
@@ -149,6 +161,9 @@ router.get("/verify", (req, res) => {
       return res.status(401).json({ error: "No token provided" })
     }
 
+    // Get admins from global storage
+    const admins = getAdmins()
+    
     // Check if it's a guest token
     const guestAdmin = admins.find(
       (a) =>
@@ -216,6 +231,9 @@ router.post("/logout", (req, res) => {
       return res.status(400).json({ error: "No token provided" })
     }
 
+    // Get admins from global storage
+    const admins = getAdmins()
+    
     // Find and revoke guest token
     const guestAdmin = admins.find((a) => a.guestToken && a.guestToken.token === token)
 
@@ -240,6 +258,9 @@ router.get("/me", (req, res) => {
       return res.status(401).json({ error: "No token provided" })
     }
 
+    // Get admins from global storage
+    const admins = getAdmins()
+    
     // Check guest token first
     const guestAdmin = admins.find(
       (a) =>

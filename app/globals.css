@@ -621,3 +621,30 @@
 @utility civic-card-feature {
   @apply bg-card rounded-2xl border shadow-md p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
 }
+
+/* Custom border color utilities */
+@utility border-t-success {
+  border-top-color: var(--civic-success);
+}
+
+@utility border-t-warning {
+  border-top-color: var(--civic-warning);
+}
+
+@utility border-t-error {
+  border-top-color: var(--civic-error);
+}
+
+/* Custom background color utilities */
+@utility bg-success {
+  background-color: var(--civic-success);
+}
+
+@utility bg-warning {
+  background-color: var(--civic-warning);
+}
+
+@utility bg-error {
+  background-color: var(--civic-error);
+}
+

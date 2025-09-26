@@ -12,16 +12,9 @@ export function FormValidationExample() {
   const form = useForm<ReportFormData>({
     resolver: zodResolver(reportSchema),
     defaultValues: {
-      title: "",
       description: "",
-      category: "",
-      location: {
-        lat: 0,
-        lng: 0,
-      },
-      address: "",
-      priority: "medium",
       anonymous: false,
+      useLocation: true,
     },
   })
 
@@ -53,37 +46,10 @@ export function FormValidationExample() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Input
-              label="Title"
-              placeholder="Enter report title"
-              {...form.register("title")}
-              error={form.formState.errors.title?.message}
-            />
-          </div>
-          
-          <div>
-            <Input
               label="Description"
               placeholder="Describe the issue"
               {...form.register("description")}
               error={form.formState.errors.description?.message}
-            />
-          </div>
-          
-          <div>
-            <Input
-              label="Category"
-              placeholder="Select category"
-              {...form.register("category")}
-              error={form.formState.errors.category?.message}
-            />
-          </div>
-          
-          <div>
-            <Input
-              label="Address"
-              placeholder="Enter location address"
-              {...form.register("address")}
-              error={form.formState.errors.address?.message}
             />
           </div>
           

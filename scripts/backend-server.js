@@ -920,17 +920,33 @@ app.get("/notifications/status", (req, res) => {
   }
 })
 
-// Error handling middleware
-app.use((error, req, res, next) => {
-  if (error instanceof multer.MulterError) {
-    if (error.code === "LIMIT_FILE_SIZE") {
-      return res.status(400).json({ error: "File too large. Maximum size is 10MB." })
+// Enhanced error handling middleware
+app.use((err, req, res, next) => {
+  // Handle body parsing errors specifically
+  if (err.type === 'entity.parse.failed') {
+    console.error('[Backend] JSON parsing error:', err);
+    return res.status(400).json({ 
+      error: 'Invalid JSON format in request body',
+      details: 'Please check that your request body contains valid JSON'
+    });
+  }
+  
+  // Handle multer errors
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ 
+        error: 'File too large',
+        details: 'Uploaded file exceeds the maximum allowed size'
+      });
     }
   }
-
-  console.error("Unhandled error:", error)
-  res.status(500).json({ error: "Internal server error" })
-})
+  
+  console.error('[Backend] Unhandled error:', err);
+  res.status(500).json({ 
+    error: 'Internal server error',
+    details: process.env.NODE_ENV === 'development' ? err.message : 'An unexpected error occurred'
+  });
+});
 
 // 404 handler
 app.use((req, res) => {

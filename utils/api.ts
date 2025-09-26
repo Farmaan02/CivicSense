@@ -1091,9 +1091,9 @@ const handleAuthError = (error: Error, statusCode: number): never => {
     }
     // Clear auth token from API client
     apiClient.setAuthToken(null)
-    // Redirect to login
+    // Redirect to login - using the correct admin login path
     if (typeof window !== 'undefined') {
-      window.location.href = '/admin'
+      window.location.href = '/login'
     }
   }
   throw error

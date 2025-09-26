@@ -4,17 +4,28 @@ import { Card } from "@/components/ui/card"
 
 interface Report {
   _id: string
+  id: string
+  trackingId: string
   title: string
   description: string
+  status: string
+  severity: string
+  priority: string
+  createdAt: string
+  updatedAt: string
   location?: {
     lat: number
     lng: number
     address?: string
   }
-  status: string
-  severity: string
   mediaUrl?: string
-  createdAt: string
+  contactInfo?: string
+  createdBy: string
+  anonymous: boolean
+  category: string
+  viewCount: number
+  upvotes: number
+  downvotes: number
 }
 
 interface MapViewProps {

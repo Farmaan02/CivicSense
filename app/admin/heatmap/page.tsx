@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ReportsMap } from "@/components/admin/reports-map"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card"
+import { Button } from "../../../components/ui/button"
+import { ReportsMap } from "../../../components/admin/reports-map"
 import { api, type Report as ApiReport } from "@/utils/api"
 import { useAdminAuth } from "@/hooks/use-admin-auth"
 import { useToast } from "@/hooks/use-toast"

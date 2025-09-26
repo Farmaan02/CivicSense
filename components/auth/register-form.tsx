@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useAuth } from "@/lib/auth"
-import { AuthForm } from "@/components/auth/auth-form"
+import { useAuth } from "../../lib/auth"
+import { AuthForm } from "./auth-form"
 
 export function RegisterForm() {
   const { register, loading } = useAuth()

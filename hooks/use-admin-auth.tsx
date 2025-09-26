@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect, createContext, useContext } from "react"
-import { api } from "@/utils/api"
+import { api } from "../utils/api"
 
 interface Admin {
   id: string

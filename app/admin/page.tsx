@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Input } from "../../components/ui/input"
+import { Badge } from "../../components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../components/ui/tabs"
 import {
   Dialog,
   DialogContent,
@@ -14,15 +14,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+} from "../../components/ui/dialog"
+import { Textarea } from "../../components/ui/textarea"
+import { Label } from "../../components/ui/label"
 import { MapPin, List, Filter, Search, UserCheck, FileText, Calendar, Eye, Edit } from "lucide-react"
-import { ReportsMap } from "@/components/admin/reports-map"
-import { TeamTable } from "@/components/admin/team-table"
-import { AnalyticsPanel } from "@/components/admin/analytics-panel"
-import { useAdminAuth } from "@/hooks/use-admin-auth"
-import { api, type Report as ApiReport, type AdminReportsResponse } from "@/utils/api"
+import { ReportsMap } from "../../components/admin/reports-map"
+import { TeamTable } from "../../components/admin/team-table"
+import { AnalyticsPanel } from "../../components/admin/analytics-panel"
+import { useAdminAuth } from "../../hooks/use-admin-auth"
+import { api, type Report as ApiReport, type AdminReportsResponse } from "../../utils/api"
 
 // Use the API Report type with admin-specific extensions
 type AdminReport = ApiReport & {

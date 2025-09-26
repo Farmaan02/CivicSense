@@ -1,10 +1,10 @@
 "use client"
 
-import { useAuth } from "@/lib/auth"
+import { useAuth } from "../../lib/auth"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
 import { MapPin, Flame, CheckCircle, Calendar, MessageCircle, Settings, Camera, Users, BarChart2, Heart, Award, TrendingUp, Eye, Clock, ThumbsUp } from "lucide-react"
 // ... existing code ...
 

@@ -1,10 +1,10 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
-import { MapView } from "@/components/map/map-view"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { apiClient, type Report } from "@/utils/api"
-import { useToast } from "@/hooks/use-toast"
+import { MapView } from "../../components/map/map-view"
+import { Button } from "../../components/ui/button"
+import { Card } from "../../components/ui/card"
+import { apiClient, type Report } from "../../utils/api"
+import { useToast } from "../../hooks/use-toast"
 
 export default function MapPage() {
   const [reports, setReports] = useState<Report[]>([])

@@ -1,11 +1,12 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { apiClient, type Report } from "@/utils/api"
 import { useToast } from "@/hooks/use-toast"
+import Image from "next/image"
 
 export default function ReportsPage() {
   const [reports, setReports] = useState<Report[]>([])
@@ -15,11 +16,7 @@ export default function ReportsPage() {
   const [severityFilter, setSeverityFilter] = useState<string>("all")
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadReports()
-  }, [])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const data = await apiClient.getReports({ format: "list" })
@@ -35,7 +32,11 @@ export default function ReportsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadReports()
+  }, [loadReports])
 
   const filteredReports = reports.filter((report) => {
     const matchesSearch =
@@ -182,9 +183,11 @@ export default function ReportsPage() {
                 {/* Media Preview */}
                 {report.mediaUrl && (
                   <div className="w-full h-32 bg-gray-100 rounded-lg overflow-hidden">
-                    <img
+                    <Image
                       src={report.mediaUrl || "/placeholder.svg"}
                       alt="Report media"
+                      width={400}
+                      height={200}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement

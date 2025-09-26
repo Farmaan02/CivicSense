@@ -1,23 +1,20 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { apiClient, type Report } from "@/utils/api"
 import { useToast } from "@/hooks/use-toast"
 import { Clock, RefreshCw } from "lucide-react"
+import Image from "next/image"
 
 export default function OngoingReportsPage() {
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadReports()
-  }, [])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const data = await apiClient.getReports({ status: "in-progress" })
@@ -33,7 +30,11 @@ export default function OngoingReportsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadReports()
+  }, [loadReports])
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -122,9 +123,11 @@ export default function OngoingReportsPage() {
                   {/* Media Preview */}
                   {report.mediaUrl && (
                     <div className="w-full h-32 bg-gray-100 rounded-lg overflow-hidden">
-                      <img
+                      <Image
                         src={report.mediaUrl || "/placeholder.svg"}
                         alt="Report media"
+                        width={400}
+                        height={200}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement

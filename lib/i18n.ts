@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 export type Language = "en" | "hi"
 
 interface TranslationData {
-  [key: string]: any
+  [key: string]: string | TranslationData
 }
 
 const translations: Record<Language, TranslationData> = {
@@ -80,7 +80,7 @@ export const useTranslation = () => {
     }
     
     const keys = key.split(".")
-    let value: any = translations[language]
+    let value: string | TranslationData = translations[language]
 
     for (const k of keys) {
       if (value && typeof value === "object" && k in value) {
@@ -128,7 +128,7 @@ export const getStaticTranslation = async (key: string, lang: Language = "en"): 
   await loadTranslations()
   
   const keys = key.split(".")
-  let value: any = translations[lang]
+  let value: string | TranslationData = translations[lang]
 
   for (const k of keys) {
     if (value && typeof value === "object" && k in value) {

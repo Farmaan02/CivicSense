@@ -119,13 +119,13 @@ export function LocationPicker({ onLocationChange, useLocation, onUseLocationCha
       }
       
       // If the API call fails, try the browser's reverse geocoding (if available)
-      if ('geocoder' in window && (window as any).google?.maps) {
-        const geocoder = new (window as any).google.maps.Geocoder()
+      if ('geocoder' in window && (window as unknown as { google?: { maps: unknown } }).google?.maps) {
+        const geocoder = new (window as unknown as { google: { maps: { Geocoder: new () => any } } }).google.maps.Geocoder()
         return new Promise((resolve, reject) => {
           geocoder.geocode(
             { location: { lat, lng } },
-            (results: any[], status: string) => {
-              if (status === 'OK' && results[0]) {
+            (results: Array<{ formatted_address?: string }>, status: string) => {
+              if (status === 'OK' && results[0] && results[0].formatted_address) {
                 resolve(results[0].formatted_address)
               } else {
                 reject(new Error('Geocoding failed'))

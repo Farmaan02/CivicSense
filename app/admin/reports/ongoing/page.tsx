@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,29 +15,29 @@ export default function AdminOngoingReportsPage() {
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      loadReports()
-    }
-  }, [isAuthenticated, authLoading])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const response = await api.getAdminReports({ status: "in-progress" })
-      setReports((response.reports as any) || [])
-    } catch (error: any) {
+      setReports(response.reports || [])
+    } catch (error: unknown) {
       console.error("Failed to load reports:", error)
       toast({
         title: "Error Loading Reports",
-        description: error.message || "Unable to load ongoing reports. Please try again.",
+        description: (error as Error).message || "Unable to load ongoing reports. Please try again.",
         variant: "destructive",
         duration: 5000,
       })
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      loadReports()
+    }
+  }, [isAuthenticated, authLoading, loadReports])
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {

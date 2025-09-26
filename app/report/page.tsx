@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast"
 import { apiClient, type Report } from "@/utils/api"
 import { Plus, Search, MapPin, List, Filter, AlertTriangle, Clock, CheckCircle } from "lucide-react"
 import { useEffect } from "react"
+import Image from "next/image"
 
 export default function ReportPage() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
@@ -32,14 +33,10 @@ export default function ReportPage() {
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadReports()
-  }, [statusFilter, severityFilter])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     setIsLoading(true)
     try {
-      const options: any = {}
+      const options: { status?: string; severity?: string } = {}
       if (statusFilter !== "all") options.status = statusFilter
       if (severityFilter !== "all") options.severity = severityFilter
 
@@ -55,7 +52,11 @@ export default function ReportPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [statusFilter, severityFilter, toast])
+
+  useEffect(() => {
+    loadReports()
+  }, [statusFilter, severityFilter, loadReports])
 
   const handleReportSubmitted = () => {
     setIsReportModalOpen(false)
@@ -142,7 +143,7 @@ export default function ReportPage() {
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold text-civic-text">Report a Community Issue</DialogTitle>
                 <DialogDescription className="text-civic-text/70">
-                  Provide details about the issue you'd like to report. Include photos and location for faster
+                  Provide details about the issue you&apos;d like to report. Include photos and location for faster
                   resolution.
                 </DialogDescription>
               </DialogHeader>
@@ -281,9 +282,11 @@ export default function ReportPage() {
                       </div>
                       {report.mediaUrl && (
                         <div className="ml-4 flex-shrink-0">
-                          <img
+                          <Image
                             src={report.mediaUrl || "/placeholder.svg"}
                             alt="Report media"
+                            width={64}
+                            height={64}
                             className="w-16 h-16 object-cover rounded-lg"
                           />
                         </div>

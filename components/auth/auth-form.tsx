@@ -54,8 +54,8 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
       await onSubmit({ email: data.email, password: data.password })
       showSuccessToast("Welcome back!", "You have successfully logged in.")
       router.push("/dashboard")
-    } catch (error: any) {
-      showErrorToast("Login failed", error.message || "Please try again.")
+    } catch (error: unknown) {
+      showErrorToast("Login failed", error instanceof Error ? error.message : "Please try again.")
     }
   }
 
@@ -64,8 +64,8 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
       await onSubmit({ email: data.email, password: data.password, name: data.name })
       showSuccessToast("Welcome to CivicPulse!", "Your account has been created successfully.")
       router.push("/dashboard")
-    } catch (error: any) {
-      showErrorToast("Registration failed", error.message || "Please try again.")
+    } catch (error: unknown) {
+      showErrorToast("Registration failed", error instanceof Error ? error.message : "Please try again.")
     }
   }
 
@@ -74,8 +74,8 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
       await guestLogin()
       showSuccessToast("Welcome as Guest!", "You are now browsing as a guest user.")
       router.push("/")
-    } catch (error: any) {
-      showErrorToast("Guest login failed", error.message || "Please try again.")
+    } catch (error: unknown) {
+      showErrorToast("Guest login failed", error instanceof Error ? error.message : "Please try again.")
     }
   }
 

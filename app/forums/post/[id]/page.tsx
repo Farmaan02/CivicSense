@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -49,7 +49,7 @@ interface ForumPost {
 
 export default function ForumPostPage() {
   const params = useParams()
-  const router = useRouter()
+  // const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
   const [post, setPost] = useState<ForumPost | null>(null)
@@ -234,7 +234,7 @@ Looking forward to working together to make this vision a reality!`,
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold text-civic-text mb-4">Post Not Found</h1>
-            <p className="text-civic-text/70 mb-6">The discussion you're looking for doesn't exist.</p>
+            <p className="text-civic-text/70 mb-6">The discussion you&apos;re looking for doesn&apos;t exist.</p>
             <Link href="/forums">
               <Button className="bg-civic-primary hover:bg-civic-accent text-white">
                 <ArrowLeft className="h-4 w-4 mr-2" />

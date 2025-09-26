@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ReportsMap } from "@/components/admin/reports-map"
@@ -15,32 +15,32 @@ export default function AdminHeatmapPage() {
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      loadReports()
-    }
-  }, [isAuthenticated, authLoading])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const response = await api.getAdminReports()
-      setReports((response.reports as any) || [])
-    } catch (error: any) {
+      setReports(response.reports || [])
+    } catch (error: unknown) {
       console.error("Failed to load reports:", error)
       toast({
         title: "Error Loading Reports",
-        description: error.message || "Unable to load reports for the heatmap. Please try again.",
+        description: (error as Error).message || "Unable to load reports for the heatmap. Please try again.",
         variant: "destructive",
         duration: 5000,
       })
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      loadReports()
+    }
+  }, [isAuthenticated, authLoading, loadReports])
 
   // Filter reports to only include those with location data
-  const reportsWithLocation = reports.filter(report => report.location)
+  const reportsWithLocation = reports.filter((report: ApiReport) => report.location)
 
   if (authLoading) {
     return (
@@ -114,7 +114,13 @@ export default function AdminHeatmapPage() {
               </div>
             ) : (
               <div className="h-[600px]">
-                <ReportsMap reports={reportsWithLocation.filter((r) => r.location) as any[]} />
+                <ReportsMap reports={reportsWithLocation
+                  .filter((r): r is ApiReport & { location: NonNullable<ApiReport['location']> } => r.location !== undefined)
+                  .map(report => ({
+                    ...report,
+                    status: report.status as "reported" | "in-review" | "in-progress" | "resolved" | "closed",
+                    priority: report.priority as "low" | "medium" | "high" | "urgent"
+                  }))} />
               </div>
             )}
             

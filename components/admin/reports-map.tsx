@@ -39,7 +39,7 @@ const statusColors = {
 
 export function ReportsMap({ reports }: ReportsMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<any | null>(null)
+  const mapInstanceRef = useRef<null>(null)
   const markersRef = useRef<any[]>([])
   const [mapLoaded, setMapLoaded] = useState(false)
 

@@ -169,7 +169,7 @@ export function ReportForm({ onClose }: ReportFormProps) {
     console.log("[v0] Voice recording completed:", audioBlob)
   }
 
-  const handleTranscriptionRequest = (audioBlob: Blob) => {
+  const handleTranscriptionRequest = (_audioBlob: Blob) => {
     // Placeholder for transcription - will be implemented in later milestone
     showToast({
       title: "Transcription Coming Soon",
@@ -274,14 +274,14 @@ export function ReportForm({ onClose }: ReportFormProps) {
           className="text-base"
         />
         {errors.contactInfo && <p className="text-sm text-red-500">{String(errors.contactInfo.message)}</p>}
-        <p className="text-sm text-gray-500">We'll send you updates about your report</p>
+        <p className="text-sm text-gray-500">We&apos;ll send you updates about your report</p>
       </div>
 
       {/* Anonymous Toggle */}
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div className="space-y-1">
           <Label className="text-base font-medium">Submit anonymously</Label>
-          <p className="text-sm text-gray-600">Your contact info won't be shared publicly</p>
+          <p className="text-sm text-gray-600">Your contact info won&apos;t be shared publicly</p>
         </div>
         <Switch
           checked={watch("anonymous")}

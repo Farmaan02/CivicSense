@@ -202,7 +202,7 @@ export function LogoShowcase() {
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>• Colors inspired by Indian tricolor</li>
                   <li>• Building/temple icon represents civic duty</li>
-                  <li>• Devanagari text: "नागरिक सेवा" (Civic Service)</li>
+                  <li>• Devanagari text: &quot;नागरिक सेवा&quot; (Civic Service)</li>
                   <li>• Gradients work well on light backgrounds</li>
                   <li>• Scalable vector graphics for all sizes</li>
                 </ul>

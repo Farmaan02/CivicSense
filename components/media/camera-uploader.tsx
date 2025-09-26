@@ -51,7 +51,7 @@ export function CameraUploader({ onMediaSelect, currentMedia }: CameraUploaderPr
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => onMediaSelect(null as any)}
+              onClick={() => onMediaSelect(null as unknown as File)}
               className="text-red-600 border-red-200 hover:bg-red-50"
             >
               Remove

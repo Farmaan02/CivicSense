@@ -9,17 +9,10 @@ import { Avatar } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/ui/ThemeToggle"
 import { DataTable } from "@/components/ui/DataTable"
 import { MapContainer } from "@/components/ui/MapContainer"
-import { Sidebar, SidebarItem } from "@/components/ui/sidebar"
-import { Header } from "@/components/ui/Header"
+import { SidebarItem } from "@/components/ui/sidebar"
 import { 
   Home, 
   MapPin, 
-  Flame, 
-  CheckCircle, 
-  Thermometer,
-  User,
-  LogIn,
-  UserPlus,
   Search,
   Bell,
   Settings
@@ -28,7 +21,6 @@ import { FormValidationExample } from "@/components/examples/FormValidationExamp
 
 export default function UIKitPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [inputValue, setInputValue] = useState("")
 
   // Sample data for DataTable
   const sampleData = [

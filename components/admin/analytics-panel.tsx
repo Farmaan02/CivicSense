@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -48,11 +48,28 @@ export function AnalyticsPanel() {
   const [period, setPeriod] = useState<"week" | "month">("week")
   const [summaryDialogOpen, setSummaryDialogOpen] = useState(false)
 
-  useEffect(() => {
-    loadAnalytics()
-  }, [period])
+  const generateWeeklySummary = useCallback(async () => {
+    try {
+      const endDate = new Date()
+      const startDate = new Date()
+      startDate.setDate(endDate.getDate() - 7)
 
-  const loadAnalytics = async () => {
+      return await api.getAnalyticsWeeklySummary(
+        startDate.toISOString().split("T")[0],
+        endDate.toISOString().split("T")[0],
+      )
+    } catch (error) {
+      console.error("Failed to generate weekly summary:", error)
+      return {
+        summary: "Unable to generate summary at this time.",
+        data: { totalReports: 0, statusBreakdown: {}, categoryBreakdown: {}, resolvedCount: 0 },
+        generatedAt: new Date().toISOString(),
+        aiGenerated: false,
+      }
+    }
+  }, [])
+
+  const loadAnalytics = useCallback(async () => {
     try {
       setLoading(true)
 
@@ -74,28 +91,11 @@ export function AnalyticsPanel() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [generateWeeklySummary, period])
 
-  const generateWeeklySummary = async () => {
-    try {
-      const endDate = new Date()
-      const startDate = new Date()
-      startDate.setDate(endDate.getDate() - 7)
-
-      return await api.getAnalyticsWeeklySummary(
-        startDate.toISOString().split("T")[0],
-        endDate.toISOString().split("T")[0],
-      )
-    } catch (error) {
-      console.error("Failed to generate weekly summary:", error)
-      return {
-        summary: "Unable to generate summary at this time.",
-        data: { totalReports: 0, statusBreakdown: {}, categoryBreakdown: {}, resolvedCount: 0 },
-        generatedAt: new Date().toISOString(),
-        aiGenerated: false,
-      }
-    }
-  }
+  useEffect(() => {
+    loadAnalytics()
+  }, [period, loadAnalytics])
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)

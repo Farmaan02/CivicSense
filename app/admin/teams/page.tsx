@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+// ... existing code ...
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -16,7 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { TeamTable } from "@/components/admin/team-table"
-import { api } from "@/utils/api"
+// ... existing code ...
 import { useAdminAuth } from "@/hooks/use-admin-auth"
 import { useToast } from "@/hooks/use-toast"
 import { Plus, Users, RefreshCw } from "lucide-react"
@@ -103,13 +103,7 @@ export default function TeamsPage() {
   })
   const { toast } = useToast()
 
-  useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      loadTeams()
-    }
-  }, [isAuthenticated, authLoading])
-
-  const loadTeams = async () => {
+  const loadTeams = useCallback(async () => {
     try {
       setLoading(true)
       // In a real implementation, this would fetch from the API
@@ -117,18 +111,24 @@ export default function TeamsPage() {
       // setTeams(teamsData)
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 500))
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to load teams:", error)
       toast({
         title: "Error Loading Teams",
-        description: error.message || "Unable to load teams. Please try again.",
+        description: error instanceof Error ? error.message : "Unable to load teams. Please try again.",
         variant: "destructive",
         duration: 5000,
       })
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      loadTeams()
+    }
+  }, [isAuthenticated, authLoading, loadTeams])
 
   const handleCreateTeam = () => {
     if (!newTeam.name.trim() || !newTeam.department.trim()) {

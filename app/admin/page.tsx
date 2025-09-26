@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect, useCallback } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -17,13 +17,12 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { MapPin, List, Filter, Search, UserCheck, Users, FileText, Calendar, Eye, Edit, BarChart3 } from "lucide-react"
+import { MapPin, List, Filter, Search, UserCheck, FileText, Calendar, Eye, Edit } from "lucide-react"
 import { ReportsMap } from "@/components/admin/reports-map"
 import { TeamTable } from "@/components/admin/team-table"
 import { AnalyticsPanel } from "@/components/admin/analytics-panel"
 import { useAdminAuth } from "@/hooks/use-admin-auth"
-import { api, type Report as ApiReport } from "@/utils/api"
-import { clearAuthState, forceLogout } from "@/utils/auth-utils"
+import { api, type Report as ApiReport, type AdminReportsResponse } from "@/utils/api"
 
 // Use the API Report type with admin-specific extensions
 type AdminReport = ApiReport & {
@@ -84,30 +83,17 @@ export default function AdminDashboard() {
     category: "all",
   })
 
-  // Load data
-  useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      // Add error boundary for async operations
-      const loadData = async () => {
-        try {
-          await Promise.all([loadReports(), loadTeams()])
-        } catch (error) {
-          console.error('Failed to load admin data:', error)
-        }
-      }
-      loadData()
-    }
-  }, [isAuthenticated, authLoading])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const response = await api.getAdminReports()
-      setReports((response.reports as any) || [])
-    } catch (error: any) {
+      const adminReports = response as AdminReportsResponse
+      setReports((adminReports.reports as AdminReport[]) || [])
+    } catch (error: unknown) {
       console.error("Failed to load reports:", error)
       // Handle auth errors by clearing expired token and forcing re-login
-      if (error.message && (error.message.includes('401') || error.message.includes('Unauthorized'))) {
+      const err = error as Error
+      if (err.message && (err.message.includes('401') || err.message.includes('Unauthorized'))) {
         console.log('Authentication failed, clearing token...')
         logout()
         return
@@ -115,22 +101,23 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [logout])
 
-  const loadTeams = async () => {
+  const loadTeams = useCallback(async () => {
     try {
       const teamsData = await api.getTeams()
       setTeams(teamsData)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to load teams:", error)
       // Handle auth errors by clearing expired token and forcing re-login
-      if (error.message && (error.message.includes('401') || error.message.includes('Unauthorized'))) {
+      const err = error as Error
+      if (err.message && (err.message.includes('401') || err.message.includes('Unauthorized'))) {
         console.log('Teams authentication failed, clearing token...')
         logout()
         return
       }
     }
-  }
+  }, [logout])
 
   const handleAssignReport = async () => {
     if (!selectedReport || !assignmentData.teamId) return
@@ -184,6 +171,21 @@ export default function AdminDashboard() {
     resolved: reports.filter((r) => r.status === "resolved").length,
     urgent: reports.filter((r) => r.priority === "urgent").length,
   }
+
+  // Load data
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      // Add error boundary for async operations
+      const loadData = async () => {
+        try {
+          await Promise.all([loadReports(), loadTeams()])
+        } catch (error) {
+          console.error('Failed to load admin data:', error)
+        }
+      }
+      loadData()
+    }
+  }, [isAuthenticated, authLoading, loadReports, loadTeams])
 
   // Handle authentication error display
   useEffect(() => {
@@ -555,7 +557,16 @@ export default function AdminDashboard() {
                   </div>
                 ) : (
                   <div className="h-[500px] rounded-xl overflow-hidden border shadow-sm">
-                    <ReportsMap reports={filteredReports.filter((r) => r.location) as any[]} />
+                    <ReportsMap reports={filteredReports.filter((r) => r.location).map(r => ({
+                      id: r.id || r._id || '',
+                      trackingId: r.trackingId,
+                      title: r.title || '',
+                      description: r.description || '',
+                      status: r.status as "reported" | "in-review" | "in-progress" | "resolved" | "closed",
+                      priority: r.priority as "low" | "medium" | "high" | "urgent",
+                      location: r.location!,
+                      createdAt: r.createdAt
+                    }))} />
                   </div>
                 )}
               </CardContent>

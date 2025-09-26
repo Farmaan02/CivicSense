@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -8,6 +8,7 @@ import { LocationFilter } from "@/components/location/location-filter"
 import { apiClient, type Report } from "@/utils/api"
 import { useToast } from "@/hooks/use-toast"
 import { MapPin, RefreshCw } from "lucide-react"
+import Image from "next/image"
 
 export default function InYourAreaPage() {
   const [reports, setReports] = useState<Report[]>([])
@@ -16,11 +17,7 @@ export default function InYourAreaPage() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | { pincode: string } | null>(null)
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadReports()
-  }, [])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const data = await apiClient.getReports()
@@ -37,7 +34,11 @@ export default function InYourAreaPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadReports()
+  }, [loadReports])
 
   const handleLocationFilter = async (locationFilter: { lat: number; lng: number } | { pincode: string }) => {
     setLocation(locationFilter)
@@ -47,7 +48,7 @@ export default function InYourAreaPage() {
       
       if ("lat" in locationFilter) {
         // Filter by geolocation (5km radius)
-        const nearbyReports = reports.filter(report => {
+        const nearbyReports = reports.filter((report: Report) => {
           if (!report.location) return false
           
           // Calculate distance using Haversine formula
@@ -68,7 +69,7 @@ export default function InYourAreaPage() {
       } else {
         // Filter by pincode (simplified - in real implementation, you'd geocode the pincode)
         // For now, we'll just filter by reports that contain the pincode in their address
-        const pincodeReports = reports.filter(report => {
+        const pincodeReports = reports.filter((report: Report) => {
           if (!report.location?.address) return false
           return report.location.address.toLowerCase().includes(locationFilter.pincode.toLowerCase())
         })
@@ -209,9 +210,11 @@ export default function InYourAreaPage() {
                   {/* Media Preview */}
                   {report.mediaUrl && (
                     <div className="w-full h-32 bg-gray-100 rounded-lg overflow-hidden">
-                      <img
+                      <Image
                         src={report.mediaUrl || "/placeholder.svg"}
                         alt="Report media"
+                        width={400}
+                        height={200}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement

@@ -6,7 +6,7 @@ import { useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Flame, CheckCircle, Calendar, MessageCircle, Settings, Camera, Users, BarChart2, Heart, Award, TrendingUp, Eye, Clock, ThumbsUp } from "lucide-react"
-import Link from "next/link"
+// ... existing code ...
 
 export default function DashboardPage() {
   const { user, loading } = useAuth()
@@ -38,7 +38,7 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 py-8 md:pl-4">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">Welcome back, {user.name}!</h1>
-          <p className="text-muted-foreground mt-2 text-lg">Here's what's happening in your community</p>
+          <p className="text-muted-foreground mt-2 text-lg">Here&apos;s what&apos;s happening in your community</p>
         </div>
 
         {/* Enhanced Motivational Banner */}
@@ -274,7 +274,7 @@ export default function DashboardPage() {
                   <Award className="h-8 w-8 text-green-500" />
                   <div>
                     <div className="font-bold text-lg">Community Hero</div>
-                    <div className="text-sm text-muted-foreground">You've reported 3 issues this month</div>
+                    <div className="text-sm text-muted-foreground">You&apos;ve reported 3 issues this month</div>
                   </div>
                 </div>
                 

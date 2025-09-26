@@ -38,7 +38,7 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
   const mapRef = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<any>(null)
   const [leaflet, setLeaflet] = useState<any>(null)
-  const [selectedReport, setSelectedReport] = useState<Report | null>(null)
+  // const [selectedReport, setSelectedReport] = useState<Report | null>(null)
 
   // Load Leaflet dynamically
   useEffect(() => {
@@ -56,7 +56,7 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
         const L = await import("leaflet")
 
         // Fix default markers
-        delete (L.Icon.Default.prototype as any)._getIconUrl
+        delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: () => void })._getIconUrl
         L.Icon.Default.mergeOptions({
           iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
           iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
@@ -106,7 +106,7 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
     const reportsWithLocation = reports.filter(report => report.location)
 
     // Clear existing markers
-    map.eachLayer((layer: any) => {
+    map.eachLayer((layer: unknown) => {
       if (layer instanceof leaflet.Marker) {
         map.removeLayer(layer)
       }
@@ -159,7 +159,6 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
         marker.bindPopup(popupContent)
 
         marker.on("click", () => {
-          setSelectedReport(report)
           if (onMarkerClick) {
             onMarkerClick(report)
           }
@@ -173,12 +172,12 @@ export function MapView({ reports, onMarkerClick, className = "" }: MapViewProps
     if (reportsWithLocation.length > 1) {
       map.fitBounds(bounds, { padding: [20, 20] })
     }
-  }, [map, leaflet, reports, onMarkerClick])
+  }, [map, leaflet, reports])
 
   // Global function for popup buttons
   useEffect(() => {
     if (typeof window !== "undefined") {
-      ;(window as any).viewReportDetail = (reportId: string) => {
+      ;(window as unknown as { viewReportDetail?: (reportId: string) => void }).viewReportDetail = (reportId: string) => {
         const report = reports.find((r) => r._id === reportId)
         if (report && onMarkerClick) {
           onMarkerClick(report)

@@ -7,7 +7,7 @@ import { useNotifications } from "@/hooks/use-notifications"
 
 interface NotificationContextType {
   isConnected: boolean
-  showNotification: (type: string, data: any) => void
+  showNotification: (type: string, data: unknown) => void
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined)

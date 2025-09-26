@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { MapView } from "@/components/map/map-view"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -12,11 +12,7 @@ export default function MapPage() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadReports()
-  }, [])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const data = await apiClient.getReports()
@@ -32,7 +28,11 @@ export default function MapPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadReports()
+  }, [loadReports])
 
   const handleMarkerClick = (report: Report) => {
     setSelectedReport(report)

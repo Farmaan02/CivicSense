@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapView } from "@/components/map/map-view"
@@ -13,11 +13,7 @@ export default function HeatmapPage() {
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadReports()
-  }, [])
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true)
       const data = await apiClient.getReports()
@@ -33,10 +29,14 @@ export default function HeatmapPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadReports()
+  }, [loadReports])
 
   // Filter reports to only include those with location data
-  const reportsWithLocation = reports.filter(report => report.location)
+  const reportsWithLocation = reports.filter((report: Report) => report.location)
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -82,8 +82,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("auth_token", response.token)
         localStorage.setItem("civiccare_user", JSON.stringify(response.user))
       }
-    } catch (error: any) {
-      throw new Error(error.message || "Registration failed")
+    } catch (error: unknown) {
+      throw new Error(error instanceof Error ? error.message : "Registration failed")
     } finally {
       setLoading(false)
     }
@@ -105,8 +105,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("auth_token", response.token)
         localStorage.setItem("civiccare_user", JSON.stringify(guestUser))
       }
-    } catch (error: any) {
-      throw new Error(error.message || "Guest login failed")
+    } catch (error: unknown) {
+      throw new Error(error instanceof Error ? error.message : "Guest login failed")
     } finally {
       setLoading(false)
     }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -9,6 +9,8 @@ import { Layers, TrendingUp } from "lucide-react"
 import { api } from "@/utils/api"
 
 // Global Google Maps interface declaration
+// Note: This is a simplified declaration for heatmap functionality
+// In a production environment, you would import proper Google Maps types
 declare global {
   interface Window {
     google: any;
@@ -25,7 +27,7 @@ interface HeatmapPoint {
 }
 
 interface HeatmapOverlayProps {
-  map: any | null
+  map: unknown | null
   onToggle?: (enabled: boolean) => void
 }
 
@@ -33,26 +35,26 @@ export function HeatmapOverlay({ map, onToggle }: HeatmapOverlayProps) {
   const [heatmapEnabled, setHeatmapEnabled] = useState(false)
   const [heatmapData, setHeatmapData] = useState<HeatmapPoint[]>([])
   const [loading, setLoading] = useState(false)
-  const heatmapRef = useRef<any | null>(null)
+  const heatmapRef = useRef<any>(null)
 
   // Load heatmap data from analytics API
-  const loadHeatmapData = async () => {
+  const loadHeatmapData = useCallback(async () => {
     try {
       setLoading(true)
 
       const response = await api.getAnalyticsHeatmapData()
       setHeatmapData(response.data || [])
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to load heatmap data:", error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   // Initialize heatmap data on component mount
   useEffect(() => {
     loadHeatmapData()
-  }, [])
+  }, [loadHeatmapData])
 
   // Toggle heatmap overlay
   const toggleHeatmap = (enabled: boolean) => {
@@ -73,7 +75,7 @@ export function HeatmapOverlay({ map, onToggle }: HeatmapOverlayProps) {
 
     if (enabled && heatmapData.length > 0) {
       // Create heatmap points with weighted intensity
-      const heatmapPoints = heatmapData.map((point) => {
+      const heatmapPoints = heatmapData.map((point): { location: unknown; weight: number } => {
         // Weight intensity based on priority and status
         let weight = point.intensity
 
@@ -113,7 +115,7 @@ export function HeatmapOverlay({ map, onToggle }: HeatmapOverlayProps) {
           "rgba(191, 0, 31, 1)",
           "rgba(255, 0, 0, 1)",
         ],
-      })
+      } as unknown as typeof window.google.maps.visualization.HeatmapLayer)
     } else if (heatmapRef.current) {
       // Remove heatmap layer
       heatmapRef.current.setMap(null)

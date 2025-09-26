@@ -33,8 +33,8 @@ export async function GET() {
         'Content-Type': 'application/json'
       }
     });
-  } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), {
+  } catch (err: unknown) {
+    return new Response(JSON.stringify({ success: false, error: (err as Error).message }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'

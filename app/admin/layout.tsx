@@ -5,8 +5,8 @@ import type React from "react"
 import { AdminAuthProvider, useAdminAuth } from "../../hooks/use-admin-auth"
 import { AdminAuth } from "../../components/admin/admin-auth"
 import { SidebarProvider, SidebarInset } from "../../components/ui/sidebar"
-import { AdminSidebar } from "@/components/navigation/admin-sidebar"
-import { Header } from "@/components/layout/header"
+import { AdminSidebar } from "../../components/navigation/admin-sidebar"
+import { Header } from "../../components/layout/header"
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading, error } = useAdminAuth()

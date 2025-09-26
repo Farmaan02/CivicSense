@@ -6,6 +6,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Fix for OneDrive symlink issues
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
   images: {
     unoptimized: true,
     // Allow images from Google Maps and other trusted sources
@@ -18,6 +23,8 @@ const nextConfig = {
       'placehold.co'
     ],
   },
+  // Additional OneDrive fixes
+  output: 'standalone',
 }
 
 export default nextConfig
